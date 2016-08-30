@@ -18,8 +18,10 @@ import org.slf4j.LoggerFactory;
 
 import io.github.bangun.storagebrowser.data.RootNode;
 import io.github.bangun.storagebrowser.fragment.BrowseFragment;
+import io.github.bangun.storagebrowser.fragment.CopyUriFragment;
 
-public class BrowseActivity extends AppCompatActivity {
+public class BrowseActivity extends AppCompatActivity
+        implements CopyUriFragment.Listener {
 
     private static final Logger logger = LoggerFactory.getLogger(BrowseActivity.class);
 
@@ -69,6 +71,11 @@ public class BrowseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onCopyUriDone(boolean success) {
+        browseFragment.reload();
+    }
+
     private void documentPicked(Intent data) {
         Uri root = data.getData();
 
@@ -83,12 +90,6 @@ public class BrowseActivity extends AppCompatActivity {
         setting.addRoot(rootDocument);
 
         browseFragment.reload();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.fragment_browse, menu);
-        return true;
     }
 
     private void initBrowseFragment() {
@@ -117,4 +118,5 @@ public class BrowseActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         startActivityForResult(intent, PICK_ROOT_DOCUMENT);
     }
+
 }

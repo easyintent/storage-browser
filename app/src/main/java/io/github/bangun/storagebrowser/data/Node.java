@@ -22,5 +22,7 @@ public interface Node {
 
     Uri getUri();
 
+    Node newFile(Context context, String name, String type);
+
     String getType();
 }

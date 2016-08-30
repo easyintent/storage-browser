@@ -2,5 +2,18 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools">
 
+    <item
+        android:id="@+id/refresh"
+        android:title="@string/lbl_refresh"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_refresh"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/copy_from"
+        android:title="@string/lbl_copy_from"
+        android:orderInCategory="500"
+        app:showAsAction="never"/>
+
 
 </menu>

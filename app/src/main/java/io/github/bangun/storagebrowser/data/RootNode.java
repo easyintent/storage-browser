@@ -29,9 +29,6 @@ public class RootNode implements Node {
 
     @Override
     public List<Node> list(Context context) {
-        if (DocumentFile.isDocumentUri(context, uri)) {
-            throw new UnsupportedOperationException("Not implemented for " + uri);
-        }
         DocumentFile root = DocumentFile.fromTreeUri(context, uri);
         return FileNode.getChildren(this, root);
     }
@@ -69,6 +66,12 @@ public class RootNode implements Node {
     @Override
     public Uri getUri() {
         return uri;
+    }
+
+    @Override
+    public Node newFile(Context context, String name, String type) {
+        DocumentFile root = DocumentFile.fromTreeUri(context, uri);
+        return new FileNode(this, root.createFile(name, type));
     }
 
     @Override

@@ -1,17 +1,22 @@
 package io.github.bangun.storagebrowser.fragment;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.provider.DocumentFile;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +29,11 @@ import io.github.bangun.storagebrowser.data.Node;
 import io.github.bangun.storagebrowser.data.RootNode;
 
 @EFragment
+@OptionsMenu(R.menu.fragment_browse)
 public class BrowseFragment extends ListFragment {
 
     private static final Logger logger = LoggerFactory.getLogger(BrowseFragment.class);
+    private static final int COPY_FROM = 0x10c0;
 
     private Node current;
     private Setting setting;
@@ -39,6 +46,7 @@ public class BrowseFragment extends ListFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -48,6 +56,30 @@ public class BrowseFragment extends ListFragment {
         reload();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            case COPY_FROM:
+                copyFrom(data);
+                break;
+        }
+    }
+
+    private void copyFrom(Intent data) {
+
+        //logger.debug("copy from : {}", data);
+
+        Uri uri = data.getData();
+        DocumentFile src = DocumentFile.fromSingleUri(getActivity(), uri);
+        Node target = current.newFile(getActivity(), src.getName(), src.getType());
+
+        CopyUriFragment copyUriFragment = CopyUriFragment.newInstance(src.getUri(), target.getUri());
+        copyUriFragment.show(getFragmentManager(), "copy_fragment");
+    }
 
     public boolean isRoot() {
         return current == null;
@@ -78,6 +110,25 @@ public class BrowseFragment extends ListFragment {
         } else {
             listChildren(getActivity(), current);
         }
+    }
+
+    @OptionsItem(R.id.refresh)
+    protected void refreshClicked() {
+        reload();
+    }
+
+    @OptionsItem(R.id.copy_from)
+    protected void copyFromClicked() {
+
+        if (current == null) {
+            // not applicable on root
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent, COPY_FROM);
     }
 
     @Background

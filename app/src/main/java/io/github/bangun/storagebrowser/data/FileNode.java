@@ -44,6 +44,11 @@ public class FileNode implements Node {
     }
 
     @Override
+    public Node newFile(Context context, String name, String type) {
+        return new FileNode(this, file.createFile(type, name));
+    }
+
+    @Override
     public String getType() {
         return file.getType();
     }
