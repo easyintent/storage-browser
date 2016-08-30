@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Storage Browser</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="lbl_local_storage">Local storage</string>
+    <string name="lbl_bytes_ex">%s bytes</string>
+    <string name="lbl_na">-</string>
+    <string name="lbl_no_data">No files here</string>
+    <string name="lbl_copy_from">Copy from</string>
+    <string name="lbl_refresh">Refresh</string>
+
+    <string name="msg_no_app">No app to handle this intent</string>
+    <string name="msg_can_not_create_dir">Create new directory not yet supported</string>
+
+    <string name="msg_add_root">Please add top level directory to start browsing</string>
+
+</resources>

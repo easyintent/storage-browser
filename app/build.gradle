@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
+
+    defaultConfig {
+        applicationId "io.github.bangun.storagebrowser"
+        minSdkVersion 21
+        targetSdkVersion 23
+        versionCode 1
+        versionName "0.0.1-git"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    aaVersion = '4.0.0'
+}
+
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0]?.processResources?.manifestFile
+        resourcePackageName android.defaultConfig.applicationId
+
+        // use SomeClassEx convention
+        classSuffix "Ex"
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:design:24.1.1'
+
+    compile 'org.slf4j:slf4j-android:1.6.1-RC1'
+    compile "org.androidannotations:androidannotations-api:$aaVersion"
+
+    apt "org.androidannotations:androidannotations:$aaVersion"
+
+    testCompile 'junit:junit:4.12'
+}

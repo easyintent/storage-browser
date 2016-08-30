@@ -1,0 +1,19 @@
+*.iml
+.gradle
+.DS_Store
+/local.properties
+/build
+/captures
+
+# Just configure android studio manually
+.idea
+*.iml
+
+# Exclude gradle wrapper
+gradle
+gradlew
+gradlew.bat
+
+# Binary
+*.apk
+*.class
