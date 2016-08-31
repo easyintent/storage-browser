@@ -13,16 +13,13 @@ public interface Node {
     Node getParent() throws UnsupportedOperationException;
     boolean isDirectory();
 
-    long size();
-    String getName();
-
-    List<Node> list(Context context);
+    Node newFile(Context context, String name, String type);
     String getSummary(Context context);
     Drawable getIcon(Context context);
+    List<Node> list(Context context);
 
+    String getName();
+    long size();
     Uri getUri();
-
-    Node newFile(Context context, String name, String type);
-
     String getType();
 }

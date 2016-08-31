@@ -21,12 +21,14 @@ import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.bangun.storagebrowser.R;
-import io.github.bangun.storagebrowser.Setting;
 import io.github.bangun.storagebrowser.data.Node;
-import io.github.bangun.storagebrowser.data.RootNode;
+import io.github.bangun.storagebrowser.data.TopLevelDir;
+import io.github.bangun.storagebrowser.data.repository.DefaultTopLevelRepository;
+import io.github.bangun.storagebrowser.data.repository.TopLevelDirRepository;
 
 @EFragment
 @OptionsMenu(R.menu.fragment_browse)
@@ -36,7 +38,6 @@ public class BrowseFragment extends ListFragment {
     private static final int COPY_FROM = 0x10c0;
 
     private Node current;
-    private Setting setting;
 
     public static BrowseFragment newInstance() {
         return new BrowseFragmentEx();
@@ -52,7 +53,6 @@ public class BrowseFragment extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setting = new Setting(getActivity());
         reload();
     }
 
@@ -71,11 +71,15 @@ public class BrowseFragment extends ListFragment {
 
     private void copyFrom(Intent data) {
 
-        //logger.debug("copy from : {}", data);
-
         Uri uri = data.getData();
         DocumentFile src = DocumentFile.fromSingleUri(getActivity(), uri);
         Node target = current.newFile(getActivity(), src.getName(), src.getType());
+
+        if (target == null) {
+            // can not create new file
+            Toast.makeText(getActivity(), R.string.msg_copy_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         CopyUriFragment copyUriFragment = CopyUriFragment.newInstance(src.getUri(), target.getUri());
         copyUriFragment.show(getFragmentManager(), "copy_fragment");
@@ -97,7 +101,7 @@ public class BrowseFragment extends ListFragment {
             return true;
         }
 
-        listChildren(getActivity(), current.getParent());
+        getChildrenList(getActivity(), current.getParent());
         return true;
     }
 
@@ -106,9 +110,9 @@ public class BrowseFragment extends ListFragment {
         setListShown(false);
 
         if (current == null) {
-            listRoot();
+            getTopLevelList(getActivity());
         } else {
-            listChildren(getActivity(), current);
+            getChildrenList(getActivity(), current);
         }
     }
 
@@ -132,16 +136,16 @@ public class BrowseFragment extends ListFragment {
     }
 
     @Background
-    protected void listChildren(Context context, Node path) {
+    protected void getChildrenList(Context context, Node path) {
 
         logger.debug("Loading path: {}", path.getUri());
         List<Node> children = path.list(context);
 
-        onListPathDone(path, children);
+        onGetChildrenListDone(path, children);
     }
 
     @UiThread
-    protected void onListPathDone(Node path, List<Node> children) {
+    protected void onGetChildrenListDone(Node path, List<Node> children) {
         this.current = path;
         if (!isAdded()) {
             return;
@@ -149,16 +153,21 @@ public class BrowseFragment extends ListFragment {
         showList(children);
     }
 
-    private void listRoot() {
-        List<RootNode> rootDocuments = setting.listRoot();
-        showList(rootDocuments);
+    @Background
+    protected void getTopLevelList(Context context) {
+        TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
+        List<TopLevelDir> rootDocuments = repo.listAll();
+        List<Node> topLevels = new ArrayList<>();
+        for (TopLevelDir root : rootDocuments) {
+            topLevels.add(root.createNode(context));
+        }
+        onGetChildrenListDone(null, topLevels);
     }
-
 
     private void showItem(Node item) {
         if (item.isDirectory()) {
             setListShown(false);
-            listChildren(getActivity(), item);
+            getChildrenList(getActivity(), item);
         } else {
             openFile(item);
         }

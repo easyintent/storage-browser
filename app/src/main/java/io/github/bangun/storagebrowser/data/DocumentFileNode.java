@@ -13,12 +13,12 @@ import java.util.List;
 
 import io.github.bangun.storagebrowser.R;
 
-public class FileNode implements Node {
+public class DocumentFileNode implements Node {
 
     private Node parent;
     private DocumentFile file;
 
-    public FileNode(Node parent, DocumentFile file) {
+    public DocumentFileNode(Node parent, DocumentFile file) {
         this.parent = parent;
         this.file = file;
     }
@@ -45,7 +45,7 @@ public class FileNode implements Node {
 
     @Override
     public Node newFile(Context context, String name, String type) {
-        return new FileNode(this, file.createFile(type, name));
+        return new DocumentFileNode(this, file.createFile(type, name));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class FileNode implements Node {
         DocumentFile[] files = documentFile.listFiles();
         List<Node> nodeList = new ArrayList<>();
         for (DocumentFile file : files) {
-            nodeList.add(new FileNode(parent, file));
+            nodeList.add(new DocumentFileNode(parent, file));
         }
         Collections.sort(nodeList, new NodeComparator());
         return nodeList;

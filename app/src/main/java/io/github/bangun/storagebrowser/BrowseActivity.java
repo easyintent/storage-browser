@@ -2,6 +2,7 @@ package io.github.bangun.storagebrowser;
 
 import android.app.FragmentManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,16 +11,22 @@ import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
 import android.widget.Toast;
 
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.bangun.storagebrowser.data.RootNode;
+import io.github.bangun.storagebrowser.data.DocumentFileTopLevelDir;
+import io.github.bangun.storagebrowser.data.TopLevelDir;
+import io.github.bangun.storagebrowser.data.repository.DefaultTopLevelRepository;
+import io.github.bangun.storagebrowser.data.repository.TopLevelDirRepository;
 import io.github.bangun.storagebrowser.fragment.BrowseFragment;
 import io.github.bangun.storagebrowser.fragment.CopyUriFragment;
 
+@EActivity
 public class BrowseActivity extends AppCompatActivity
         implements CopyUriFragment.Listener {
 
@@ -27,7 +34,6 @@ public class BrowseActivity extends AppCompatActivity
 
     private static final int PICK_ROOT_DOCUMENT = 0x00d0;
 
-    private Setting setting;
     private BrowseFragment browseFragment;
 
     @Override
@@ -38,7 +44,6 @@ public class BrowseActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setting = new Setting(this);
         initBrowseFragment();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_button);
@@ -85,10 +90,21 @@ public class BrowseActivity extends AppCompatActivity
         resolver.takePersistableUriPermission(root, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
         DocumentFile document = DocumentFile.fromTreeUri(this, root);
-        String name = document.getName();
-        RootNode rootDocument = new RootNode(name, root);
-        setting.addRoot(rootDocument);
+        TopLevelDir topLevelDir = new DocumentFileTopLevelDir(document.getUri().toString());
+        addRoot(this, topLevelDir);
 
+        browseFragment.reload();
+    }
+
+    @Background
+    protected void addRoot(Context context, TopLevelDir topLevelDir) {
+        TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
+        repo.add(topLevelDir);
+        onAddTopLevelDirFinished();
+    }
+
+    @UiThread
+    protected void onAddTopLevelDirFinished() {
         browseFragment.reload();
     }
 
