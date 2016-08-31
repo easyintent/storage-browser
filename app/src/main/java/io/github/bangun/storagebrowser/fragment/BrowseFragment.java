@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import io.github.bangun.storagebrowser.R;
 import io.github.bangun.storagebrowser.data.Node;
@@ -40,9 +41,16 @@ public class BrowseFragment extends ListFragment
     private static final int COPY_FROM = 0x10c0;
 
     private Node current;
+    private Stack<Node> stack;
+
+    private BrowseFragmentListener browseFragmentListener;
 
     public static BrowseFragment newInstance() {
         return new BrowseFragmentEx();
+    }
+
+    public BrowseFragment() {
+        stack = new Stack<>();
     }
 
     @Override
@@ -55,6 +63,8 @@ public class BrowseFragment extends ListFragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        browseFragmentListener = (BrowseFragmentListener) getActivity();
+        browseFragmentListener.onLocationChanged(stack);
         reload();
     }
 
@@ -73,7 +83,7 @@ public class BrowseFragment extends ListFragment
 
     @Override
     public void onView(Node node) {
-        showItem(node);
+        onItemSelected(node);
     }
 
     @Override
@@ -107,6 +117,21 @@ public class BrowseFragment extends ListFragment
         reload();
     }
 
+    private void onDirectoryEnter(Node node) {
+        stack.push(node);
+        browseFragmentListener.onLocationChanged(stack);
+    }
+
+    private void onDirectoryLeave(Node node) {
+        stack.pop();
+        browseFragmentListener.onLocationChanged(stack);
+    }
+
+    private void onGoToTopLevel() {
+        stack.clear();
+        browseFragmentListener.onLocationChanged(stack);
+    }
+
     private void copyFrom(Intent data) {
 
         Uri uri = data.getData();
@@ -135,10 +160,12 @@ public class BrowseFragment extends ListFragment
         // reload root
         if (!current.hasParent()) {
             current = null;
+            onGoToTopLevel();
             reload();
             return true;
         }
 
+        onDirectoryLeave(current);
         getChildrenList(current.getParent());
         return true;
     }
@@ -152,6 +179,12 @@ public class BrowseFragment extends ListFragment
         } else {
             getChildrenList(current);
         }
+    }
+
+    public void showRoot() {
+        current = null;
+        onGoToTopLevel();
+        reload();
     }
 
     public void createNewDir() {
@@ -208,10 +241,11 @@ public class BrowseFragment extends ListFragment
         onGetChildrenListDone(null, topLevels);
     }
 
-    private void showItem(Node item) {
+    private void onItemSelected(Node item) {
         if (item.isDirectory()) {
             setListShown(false);
             getChildrenList(item);
+            onDirectoryEnter(item);
         } else {
             openFile(item);
         }
@@ -238,7 +272,7 @@ public class BrowseFragment extends ListFragment
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Node item = (Node) adapterView.getItemAtPosition(i);
                 if (item != null) {
-                    showItem(item);
+                    onItemSelected(item);
                 }
             }
         });
@@ -250,6 +284,5 @@ public class BrowseFragment extends ListFragment
 
         setListShown(true);
     }
-
 
 }

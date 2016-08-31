@@ -10,29 +10,36 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Stack;
+
 import io.github.bangun.storagebrowser.data.DocumentFileTopLevelDir;
+import io.github.bangun.storagebrowser.data.Node;
 import io.github.bangun.storagebrowser.data.TopLevelDir;
 import io.github.bangun.storagebrowser.data.repository.DefaultTopLevelRepository;
 import io.github.bangun.storagebrowser.data.repository.TopLevelDirRepository;
 import io.github.bangun.storagebrowser.fragment.BrowseFragment;
+import io.github.bangun.storagebrowser.fragment.BrowseFragmentListener;
 import io.github.bangun.storagebrowser.fragment.CommonOperationListener;
 
 @EActivity
 public class BrowseActivity extends AppCompatActivity
-        implements CommonOperationListener {
+        implements CommonOperationListener, BrowseFragmentListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BrowseActivity.class);
-
     private static final int PICK_ROOT_DOCUMENT = 0x00d0;
+
+    @ViewById protected TextView pathView;
 
     private BrowseFragment browseFragment;
 
@@ -40,9 +47,6 @@ public class BrowseActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         initBrowseFragment();
 
@@ -77,8 +81,26 @@ public class BrowseActivity extends AppCompatActivity
     }
 
     @Override
+    public void onLocationChanged(Stack<Node> nodes) {
+        if (pathView == null) {
+            return;
+        }
+        // should use clickable button
+        StringBuilder sb = new StringBuilder();
+        for (Node node : nodes) {
+            sb.append(node.getName()).append(" / ");
+        }
+        pathView.setText(sb);
+    }
+
+    @Override
     public void onOperationDone(DialogFragment fragment) {
         browseFragment.reload();
+    }
+
+    @Click(R.id.all_storage_view)
+    protected void allStorageViewClicked() {
+        browseFragment.showRoot();
     }
 
     private void documentPicked(Intent data) {

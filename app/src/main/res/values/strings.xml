@@ -14,6 +14,7 @@
     <string name="lbl_ok">OK</string>
     <string name="lbl_cancel">Cancel</string>
     <string name="lbl_confirm">Confirm</string>
+    <string name="lbl_storage">All Storage /</string>
 
     <string name="lbl_view">View</string>
     <string name="lbl_delete">Delete</string>
