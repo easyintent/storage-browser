@@ -39,6 +39,6 @@
     <string name="msg_rename_ok">Renamed</string>
     <string name="msg_rename_failed">Can not rename this file</string>
 
-    <string name="msg_add_root">Please add top level directory to start browsing</string>
+    <string name="msg_add_root">Add top level directory from menu to start browsing</string>
 
 </resources>

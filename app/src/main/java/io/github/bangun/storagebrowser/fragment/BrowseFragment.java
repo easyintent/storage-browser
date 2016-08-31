@@ -3,7 +3,6 @@ package io.github.bangun.storagebrowser.fragment;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,28 +20,24 @@ import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 import io.github.bangun.storagebrowser.R;
 import io.github.bangun.storagebrowser.data.Node;
-import io.github.bangun.storagebrowser.data.TopLevelDir;
-import io.github.bangun.storagebrowser.data.TopLevelNode;
-import io.github.bangun.storagebrowser.data.repository.DefaultTopLevelRepository;
-import io.github.bangun.storagebrowser.data.repository.TopLevelDirRepository;
 
 @EFragment
 @OptionsMenu(R.menu.fragment_browse)
 public class BrowseFragment extends ListFragment
         implements NodeActionListener {
 
+    public static final String TAG = "browse_fragment";
     private static final Logger logger = LoggerFactory.getLogger(BrowseFragment.class);
 
     private static final int COPY_FROM = 0x10c0;
     private static final int COPY_TO   = 0x10c1;
 
-    private Node current;
+    private Node currentDir;
     private Stack<Node> stack;
     private volatile boolean loading;
 
@@ -64,6 +59,12 @@ public class BrowseFragment extends ListFragment
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+    }
+
+    public void setCurrentDir(Node currentDir) {
+        this.currentDir = currentDir;
+        stack.clear();
+        stack.push(currentDir);
     }
 
     @Override
@@ -123,21 +124,6 @@ public class BrowseFragment extends ListFragment
 
     @Override
     public void onRemoveFromList(Node node) {
-        removeTopLevelFromList(getActivity(), (TopLevelNode) node);
-    }
-
-    @Background
-    protected void removeTopLevelFromList(Context context, TopLevelNode node) {
-        loading = true;
-        TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
-        repo.remove(node.getTopLevelDir());
-        removeTopLevelDone();
-        loading = false;
-    }
-
-    @UiThread
-    protected void removeTopLevelDone() {
-        reload();
     }
 
     private void onDirectoryEnter(Node node) {
@@ -150,16 +136,11 @@ public class BrowseFragment extends ListFragment
         browseFragmentListener.onLocationChanged(stack);
     }
 
-    private void onGoToTopLevel() {
-        stack.clear();
-        browseFragmentListener.onLocationChanged(stack);
-    }
-
     private void copyFrom(Intent data) {
 
         Uri uri = data.getData();
         DocumentFile src = DocumentFile.fromSingleUri(getActivity(), uri);
-        Node target = current.newFile(src.getName(), src.getType());
+        Node target = currentDir.newFile(src.getName(), src.getType());
 
         if (target == null) {
             // can not create new file
@@ -188,31 +169,21 @@ public class BrowseFragment extends ListFragment
 
     }
 
-    public boolean isRoot() {
-        return current == null;
-    }
-
-    public boolean up() {
+    public void up() {
 
         if (loading) {
-            return true;
+            return;
         }
 
-        if (current == null) {
-            return false;
+        if (!currentDir.hasParent()) {
+            stack.clear();
+            browseFragmentListener.onLocationChanged(stack);
+            getFragmentManager().popBackStack();
+            return;
         }
 
-        // reload root
-        if (!current.hasParent()) {
-            current = null;
-            onGoToTopLevel();
-            reload();
-            return true;
-        }
-
-        onDirectoryLeave(current);
-        getChildrenList(current.getParent());
-        return true;
+        onDirectoryLeave(currentDir);
+        getChildrenList(currentDir.getParent());
     }
 
     public void reload() {
@@ -222,26 +193,12 @@ public class BrowseFragment extends ListFragment
         }
 
         setListShown(false);
-
-        if (current == null) {
-            getTopLevelList(getActivity());
-        } else {
-            getChildrenList(current);
-        }
-    }
-
-    public void showRoot() {
-        if (loading) {
-            return;
-        }
-        current = null;
-        onGoToTopLevel();
-        reload();
+        getChildrenList(currentDir);
     }
 
     public void createNewDir() {
         NewDirFragment newDirFragment = NewDirFragment.newInstance();
-        newDirFragment.setCurrentDir(current);
+        newDirFragment.setCurrentDir(currentDir);
         newDirFragment.show(getFragmentManager(), "new_directory");
     }
 
@@ -252,21 +209,11 @@ public class BrowseFragment extends ListFragment
 
     @OptionsItem(R.id.create_dir)
     protected void createDirClicked() {
-        if (current == null) {
-            Toast.makeText(getActivity(), R.string.msg_not_applicable_here, Toast.LENGTH_SHORT).show();
-            return;
-        }
         createNewDir();
     }
 
     @OptionsItem(R.id.copy_from)
     protected void copyFromClicked() {
-
-        if (current == null) {
-            Toast.makeText(getActivity(), R.string.msg_not_applicable_here, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -286,24 +233,11 @@ public class BrowseFragment extends ListFragment
 
     @UiThread
     protected void onGetChildrenListDone(Node path, List<Node> children) {
-        this.current = path;
+        this.currentDir = path;
         if (!isAdded()) {
             return;
         }
         showList(children);
-    }
-
-    @Background
-    protected void getTopLevelList(Context context) {
-        loading = true;
-        TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
-        List<TopLevelDir> rootDocuments = repo.listAll();
-        List<Node> topLevels = new ArrayList<>();
-        for (TopLevelDir root : rootDocuments) {
-            topLevels.add(root.createNode(context));
-        }
-        onGetChildrenListDone(null, topLevels);
-        loading = false;
     }
 
     private void onItemSelected(Node item) {
@@ -343,8 +277,7 @@ public class BrowseFragment extends ListFragment
         });
 
         if (children.isEmpty()) {
-            int msg = current == null ? R.string.msg_add_root : R.string.lbl_no_data;
-            setEmptyText(getString(msg));
+            setEmptyText(getString(R.string.lbl_no_data));
         }
 
         setListShown(true);
