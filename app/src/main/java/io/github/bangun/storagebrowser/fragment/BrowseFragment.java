@@ -42,6 +42,7 @@ public class BrowseFragment extends ListFragment
 
     private Node current;
     private Stack<Node> stack;
+    private volatile boolean loading;
 
     private BrowseFragmentListener browseFragmentListener;
 
@@ -107,9 +108,11 @@ public class BrowseFragment extends ListFragment
 
     @Background
     protected void removeTopLevelFromList(Context context, TopLevelNode node) {
+        loading = true;
         TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
         repo.remove(node.getTopLevelDir());
         removeTopLevelDone();
+        loading = false;
     }
 
     @UiThread
@@ -153,6 +156,11 @@ public class BrowseFragment extends ListFragment
     }
 
     public boolean up() {
+
+        if (loading) {
+            return true;
+        }
+
         if (current == null) {
             return false;
         }
@@ -172,6 +180,10 @@ public class BrowseFragment extends ListFragment
 
     public void reload() {
 
+        if (loading) {
+            return;
+        }
+
         setListShown(false);
 
         if (current == null) {
@@ -182,6 +194,9 @@ public class BrowseFragment extends ListFragment
     }
 
     public void showRoot() {
+        if (loading) {
+            return;
+        }
         current = null;
         onGoToTopLevel();
         reload();
@@ -200,6 +215,10 @@ public class BrowseFragment extends ListFragment
 
     @OptionsItem(R.id.create_dir)
     protected void createDirClicked() {
+        if (current == null) {
+            Toast.makeText(getActivity(), R.string.msg_not_applicable_here, Toast.LENGTH_SHORT).show();
+            return;
+        }
         createNewDir();
     }
 
@@ -219,11 +238,13 @@ public class BrowseFragment extends ListFragment
 
     @Background
     protected void getChildrenList(Node path) {
+        loading = true;
 
         logger.debug("Loading path: {}", path.getUri());
         List<Node> children = path.list();
 
         onGetChildrenListDone(path, children);
+        loading = false;
     }
 
     @UiThread
@@ -237,6 +258,7 @@ public class BrowseFragment extends ListFragment
 
     @Background
     protected void getTopLevelList(Context context) {
+        loading = true;
         TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
         List<TopLevelDir> rootDocuments = repo.listAll();
         List<Node> topLevels = new ArrayList<>();
@@ -244,6 +266,7 @@ public class BrowseFragment extends ListFragment
             topLevels.add(root.createNode(context));
         }
         onGetChildrenListDone(null, topLevels);
+        loading = false;
     }
 
     private void onItemSelected(Node item) {
