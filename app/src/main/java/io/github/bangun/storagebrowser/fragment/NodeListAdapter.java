@@ -81,6 +81,9 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
             case R.id.action_rename:
                 listener.onRename(node);
                 break;
+            case R.id.action_copy_to:
+                listener.onCopy(node);
+                break;
             case R.id.action_remove_from_list:
                 listener.onRemoveFromList(node);
                 break;

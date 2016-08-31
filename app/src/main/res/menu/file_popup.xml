@@ -10,15 +10,21 @@
         android:title="@string/lbl_view"/>
 
     <item
-        android:id="@+id/action_rename"
+        android:id="@+id/action_copy_to"
         app:showAsAction="never"
         android:orderInCategory="200"
+        android:title="@string/lbl_copy_to"/>
+
+    <item
+        android:id="@+id/action_rename"
+        app:showAsAction="never"
+        android:orderInCategory="300"
         android:title="@string/lbl_rename"/>
 
     <item
         android:id="@+id/action_delete"
         app:showAsAction="never"
-        android:orderInCategory="300"
+        android:orderInCategory="400"
         android:title="@string/lbl_delete"/>
 
 </menu>

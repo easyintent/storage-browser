@@ -6,7 +6,6 @@
     <string name="lbl_bytes_ex">%s bytes</string>
     <string name="lbl_na">-</string>
     <string name="lbl_no_data">No files here</string>
-    <string name="lbl_copy_from">Copy from</string>
     <string name="lbl_refresh">Refresh</string>
     <string name="lbl_copying">Copying</string>
     <string name="lbl_new_dir">New directory</string>
@@ -21,6 +20,8 @@
     <string name="lbl_delete">Delete</string>
     <string name="lbl_rename">Rename</string>
     <string name="lbl_remove_from_list">Remove from list</string>
+    <string name="lbl_copy_to">Copy to</string>
+    <string name="lbl_copy_from">Copy from</string>
 
     <string name="msg_no_app">No app to handle this intent</string>
     <string name="msg_can_not_create_dir">Create new directory not yet supported</string>

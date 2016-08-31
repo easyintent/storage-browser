@@ -38,11 +38,16 @@ public class BrowseFragment extends ListFragment
         implements NodeActionListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BrowseFragment.class);
+
     private static final int COPY_FROM = 0x10c0;
+    private static final int COPY_TO   = 0x10c1;
 
     private Node current;
     private Stack<Node> stack;
     private volatile boolean loading;
+
+    // source file to copy
+    private Node sourceFile;
 
     private BrowseFragmentListener browseFragmentListener;
 
@@ -79,6 +84,9 @@ public class BrowseFragment extends ListFragment
             case COPY_FROM:
                 copyFrom(data);
                 break;
+            case COPY_TO:
+                copyTo(data);
+                break;
         }
     }
 
@@ -99,6 +107,18 @@ public class BrowseFragment extends ListFragment
         RenameFileFragment renameFileFragment = RenameFileFragment.newInstance();
         renameFileFragment.setTargetFile(node);
         renameFileFragment.show(getFragmentManager(), "rename");
+    }
+
+    // copy to ..
+    //
+    @Override
+    public void onCopy(Node node) {
+        this.sourceFile = node;
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.putExtra(Intent.EXTRA_TITLE, node.getName());
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        startActivityForResult(intent, COPY_TO);
     }
 
     @Override
@@ -149,6 +169,23 @@ public class BrowseFragment extends ListFragment
 
         CopyUriFragment copyUriFragment = CopyUriFragment.newInstance(src.getUri(), target.getUri());
         copyUriFragment.show(getFragmentManager(), "copy_fragment");
+    }
+
+
+    private void copyTo(Intent data) {
+        if (sourceFile == null) {
+            // no source file
+            Toast.makeText(getActivity(), R.string.msg_copy_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Uri from = sourceFile.getUri();
+        sourceFile = null;  // remove cache
+
+        Uri to = data.getData();
+        CopyUriFragment copyUriFragment = CopyUriFragment.newInstance(from, to);
+        copyUriFragment.show(getFragmentManager(), "copy_fragment");
+
     }
 
     public boolean isRoot() {
