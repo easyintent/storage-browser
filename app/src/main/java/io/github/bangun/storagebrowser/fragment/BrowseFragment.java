@@ -32,7 +32,8 @@ import io.github.bangun.storagebrowser.data.repository.TopLevelDirRepository;
 
 @EFragment
 @OptionsMenu(R.menu.fragment_browse)
-public class BrowseFragment extends ListFragment {
+public class BrowseFragment extends ListFragment
+        implements NodeActionListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BrowseFragment.class);
     private static final int COPY_FROM = 0x10c0;
@@ -67,6 +68,21 @@ public class BrowseFragment extends ListFragment {
                 copyFrom(data);
                 break;
         }
+    }
+
+    @Override
+    public void onView(Node node) {
+
+    }
+
+    @Override
+    public void onDelete(Node node) {
+
+    }
+
+    @Override
+    public void onRename(Node node) {
+
     }
 
     private void copyFrom(Intent data) {
@@ -192,7 +208,7 @@ public class BrowseFragment extends ListFragment {
     }
 
     private void showList(List<? extends Node> children) {
-        final DocumentListAdapter adapter = new DocumentListAdapter(getActivity(), children);
+        final NodeListAdapter adapter = new NodeListAdapter(getActivity(), children, this);
         setListAdapter(adapter);
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -212,5 +228,6 @@ public class BrowseFragment extends ListFragment {
 
         setListShown(true);
     }
+
 
 }
