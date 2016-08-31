@@ -63,6 +63,11 @@ public class DocumentFileNode implements Node {
     }
 
     @Override
+    public boolean delete() {
+        return file.delete();
+    }
+
+    @Override
     public String getName() {
         return file.getName();
     }

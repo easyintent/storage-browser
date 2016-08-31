@@ -12,7 +12,6 @@ import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
@@ -26,7 +25,6 @@ import io.github.bangun.storagebrowser.data.repository.DefaultTopLevelRepository
 import io.github.bangun.storagebrowser.data.repository.TopLevelDirRepository;
 import io.github.bangun.storagebrowser.fragment.BrowseFragment;
 import io.github.bangun.storagebrowser.fragment.CommonOperationListener;
-import io.github.bangun.storagebrowser.fragment.CopyUriFragment;
 
 @EActivity
 public class BrowseActivity extends AppCompatActivity

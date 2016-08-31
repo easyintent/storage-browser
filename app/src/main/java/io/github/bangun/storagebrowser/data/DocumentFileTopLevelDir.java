@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.support.v4.provider.DocumentFile;
 
 import java.util.Collections;
-import java.util.Map;
 
 public class DocumentFileTopLevelDir extends TopLevelDir {
 
@@ -16,6 +15,6 @@ public class DocumentFileTopLevelDir extends TopLevelDir {
     @Override
     public Node createNode(Context context) {
         DocumentFile file = DocumentFile.fromTreeUri(context, Uri.parse(getUri()));
-        return new DocumentFileRootNode(new DocumentFileNode(null, file));
+        return new DocumentFileRootNode(this, new DocumentFileNode(null, file));
     }
 }

@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools">
+
+
+    <item
+        android:id="@+id/action_view"
+        app:showAsAction="never"
+        android:orderInCategory="100"
+        android:title="@string/lbl_view"/>
+
+    <item
+        android:id="@+id/action_remove_from_list"
+        app:showAsAction="never"
+        android:orderInCategory="100"
+        android:title="@string/lbl_remove_from_list"/>
+
+</menu>

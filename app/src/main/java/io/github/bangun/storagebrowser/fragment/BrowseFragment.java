@@ -27,6 +27,7 @@ import java.util.List;
 import io.github.bangun.storagebrowser.R;
 import io.github.bangun.storagebrowser.data.Node;
 import io.github.bangun.storagebrowser.data.TopLevelDir;
+import io.github.bangun.storagebrowser.data.TopLevelNode;
 import io.github.bangun.storagebrowser.data.repository.DefaultTopLevelRepository;
 import io.github.bangun.storagebrowser.data.repository.TopLevelDirRepository;
 
@@ -72,17 +73,36 @@ public class BrowseFragment extends ListFragment
 
     @Override
     public void onView(Node node) {
-
+        showItem(node);
     }
 
     @Override
     public void onDelete(Node node) {
-
+        DeleteFileFragment deleteFileFragment = DeleteFileFragment.newInstance();
+        deleteFileFragment.setTargetFile(node);
+        deleteFileFragment.show(getFragmentManager(), "confirm_delete");
     }
 
     @Override
     public void onRename(Node node) {
 
+    }
+
+    @Override
+    public void onRemoveFromList(Node node) {
+        removeTopLevelFromList(getActivity(), (TopLevelNode) node);
+    }
+
+    @Background
+    protected void removeTopLevelFromList(Context context, TopLevelNode node) {
+        TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
+        repo.remove(node.getTopLevelDir());
+        removeTopLevelDone();
+    }
+
+    @UiThread
+    protected void removeTopLevelDone() {
+        reload();
     }
 
     private void copyFrom(Intent data) {

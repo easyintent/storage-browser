@@ -2,10 +2,8 @@ package io.github.bangun.storagebrowser.data.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;

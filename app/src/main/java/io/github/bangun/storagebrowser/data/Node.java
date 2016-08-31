@@ -24,4 +24,6 @@ public interface Node {
     long size();
     Uri getUri();
     String getType();
+
+    boolean delete();
 }

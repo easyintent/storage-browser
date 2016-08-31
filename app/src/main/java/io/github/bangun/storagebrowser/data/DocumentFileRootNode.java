@@ -9,12 +9,14 @@ import java.util.List;
 
 import io.github.bangun.storagebrowser.R;
 
-public class DocumentFileRootNode implements Node {
+public class DocumentFileRootNode implements TopLevelNode {
 
     private DocumentFileNode documentFileNode;
+    private TopLevelDir topLevelDir;
 
-    public DocumentFileRootNode(DocumentFileNode documentFileNode) {
+    public DocumentFileRootNode(TopLevelDir topLevelDir, DocumentFileNode documentFileNode) {
         this.documentFileNode = documentFileNode;
+        this.topLevelDir = topLevelDir;
     }
 
     @Override
@@ -75,5 +77,15 @@ public class DocumentFileRootNode implements Node {
     @Override
     public String getType() {
         return documentFileNode.getType();
+    }
+
+    @Override
+    public boolean delete() {
+        return documentFileNode.delete();
+    }
+
+    @Override
+    public TopLevelDir getTopLevelDir() {
+        return topLevelDir;
     }
 }

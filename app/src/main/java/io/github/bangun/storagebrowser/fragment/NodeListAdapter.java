@@ -41,10 +41,7 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
         holder.summary.setText(node.getSummary(getContext()));
         holder.icon.setImageDrawable(node.getIcon(getContext()));
 
-        if (node.hasParent()) {
-            // can not rename top level dir
-            addListener(holder.more, node);
-        }
+        addListener(holder.more, node);
 
         return row;
     }
@@ -53,7 +50,8 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
         moreView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final int menu = node.isDirectory() ? R.menu.dir_popup : R.menu.file_popup;
+                int menu = node.isDirectory() ? R.menu.dir_popup : R.menu.file_popup;
+                menu = !node.hasParent() ? R.menu.top_level_popup : menu;
                 final PopupMenu popup = new PopupMenu(getContext(), view);
                 popup.getMenuInflater().inflate(menu, popup.getMenu());
                 addPopupListener(popup, node);
@@ -82,6 +80,9 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
                 break;
             case R.id.action_rename:
                 listener.onRename(node);
+                break;
+            case R.id.action_remove_from_list:
+                listener.onRemoveFromList(node);
                 break;
         }
     }
