@@ -10,6 +10,12 @@
         app:showAsAction="always"/>
 
     <item
+        android:id="@+id/create_dir"
+        android:title="@string/lbl_new_dir"
+        android:orderInCategory="200"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/copy_from"
         android:title="@string/lbl_copy_from"
         android:orderInCategory="500"

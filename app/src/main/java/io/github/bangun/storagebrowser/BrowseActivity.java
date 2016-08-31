@@ -16,6 +16,8 @@ import android.widget.TextView;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.slf4j.Logger;
@@ -33,6 +35,7 @@ import io.github.bangun.storagebrowser.fragment.BrowseFragmentListener;
 import io.github.bangun.storagebrowser.fragment.CommonOperationListener;
 
 @EActivity
+@OptionsMenu(R.menu.activity_browse)
 public class BrowseActivity extends AppCompatActivity
         implements CommonOperationListener, BrowseFragmentListener {
 
@@ -49,14 +52,6 @@ public class BrowseActivity extends AppCompatActivity
         setContentView(R.layout.activity_browse);
 
         initBrowseFragment();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addDocument();
-            }
-        });
     }
 
     @Override
@@ -103,6 +98,12 @@ public class BrowseActivity extends AppCompatActivity
         browseFragment.showRoot();
     }
 
+    @OptionsItem(R.id.add_storage)
+    protected void addRootDocument() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        startActivityForResult(intent, PICK_ROOT_DOCUMENT);
+    }
+
     private void documentPicked(Intent data) {
         Uri root = data.getData();
 
@@ -143,17 +144,5 @@ public class BrowseActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void addDocument() {
-        if (browseFragment.isRoot()) {
-            addRootDocument();
-        } else {
-            browseFragment.createNewDir();
-        }
-    }
-
-    private void addRootDocument() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        startActivityForResult(intent, PICK_ROOT_DOCUMENT);
-    }
 
 }

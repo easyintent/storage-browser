@@ -9,12 +9,13 @@
     <string name="lbl_copy_from">Copy from</string>
     <string name="lbl_refresh">Refresh</string>
     <string name="lbl_copying">Copying</string>
-    <string name="lbl_new_dir">Create new directory</string>
+    <string name="lbl_new_dir">New directory</string>
     <string name="lbl_default_new_dir">New Directory</string>
     <string name="lbl_ok">OK</string>
     <string name="lbl_cancel">Cancel</string>
     <string name="lbl_confirm">Confirm</string>
     <string name="lbl_storage">All Storage /</string>
+    <string name="lbl_add_storage">Add New Storage</string>
 
     <string name="lbl_view">View</string>
     <string name="lbl_delete">Delete</string>

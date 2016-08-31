@@ -198,6 +198,11 @@ public class BrowseFragment extends ListFragment
         reload();
     }
 
+    @OptionsItem(R.id.create_dir)
+    protected void createDirClicked() {
+        createNewDir();
+    }
+
     @OptionsItem(R.id.copy_from)
     protected void copyFromClicked() {
 

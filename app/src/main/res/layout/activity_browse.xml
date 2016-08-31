@@ -7,11 +7,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <FrameLayout
+        android:id="@+id/content_view"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:showIn="@layout/activity_browse"/>
+
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/path_background"
         android:scrollbars="none"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
         android:fillViewport="true">
 
         <LinearLayout
@@ -19,7 +29,8 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="@dimen/margin_medium">
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/all_storage_view"
@@ -40,24 +51,4 @@
 
     </HorizontalScrollView>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/content_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:showIn="@layout/activity_browse"/>
-
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_action_add"/>
-
-    </FrameLayout>
 </LinearLayout>
