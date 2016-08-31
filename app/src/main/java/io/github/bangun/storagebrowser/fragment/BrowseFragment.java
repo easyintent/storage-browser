@@ -183,6 +183,7 @@ public class BrowseFragment extends ListFragment
         }
 
         onDirectoryLeave(currentDir);
+        setListShown(false);
         getChildrenList(currentDir.getParent());
     }
 

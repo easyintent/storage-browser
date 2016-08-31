@@ -72,7 +72,7 @@ public class NewDirFragment extends DialogFragment {
                         create(node, name);
                     }
                 })
-                .setNeutralButton(R.string.lbl_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.lbl_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 

@@ -20,7 +20,7 @@ import io.github.bangun.storagebrowser.data.TopLevelDir;
 //
 public class DefaultTopLevelRepository implements TopLevelDirRepository {
 
-    private static final String ROOT_LIST = "";
+    private static final String ROOT_LIST = "root_list";
     private Context context;
     private Gson gson;
 
