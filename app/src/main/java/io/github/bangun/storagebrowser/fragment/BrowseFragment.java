@@ -125,7 +125,7 @@ public class BrowseFragment extends ListFragment {
     protected void copyFromClicked() {
 
         if (current == null) {
-            // not applicable on root
+            Toast.makeText(getActivity(), R.string.msg_not_applicable_here, Toast.LENGTH_SHORT).show();
             return;
         }
 

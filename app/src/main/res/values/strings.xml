@@ -14,6 +14,7 @@
     <string name="msg_can_not_create_dir">Create new directory not yet supported</string>
     <string name="msg_copy_done">Copy file done</string>
     <string name="msg_copy_failed">Copy file failed</string>
+    <string name="msg_not_applicable_here">Not applicable on this location</string>
 
     <string name="msg_add_root">Please add top level directory to start browsing</string>
 

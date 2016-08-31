@@ -28,11 +28,6 @@ import io.github.bangun.storagebrowser.R;
 @EFragment
 public class CopyUriFragment extends DialogFragment {
 
-    public interface Listener {
-        void onCopyUriDone(boolean success);
-    }
-
-
     private static final Logger logger = LoggerFactory.getLogger(CopyUriFragment.class);
 
     private static final int MAX = 100;
@@ -40,7 +35,7 @@ public class CopyUriFragment extends DialogFragment {
     @FragmentArg protected Uri target;
 
     private boolean copying;
-    private Listener listener;
+    private CommonOperationListener listener;
 
     public static CopyUriFragment newInstance(Uri source, Uri target) {
         CopyUriFragment fragment = new CopyUriFragmentEx();
@@ -61,7 +56,7 @@ public class CopyUriFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listener = (Listener) getActivity();
+        listener = (CommonOperationListener) getActivity();
         if (!copying) {
             copying = true;
             startCopy(getActivity().getContentResolver(), source, target);
@@ -103,7 +98,7 @@ public class CopyUriFragment extends DialogFragment {
         } else {
             finishNoMessage(success);
         }
-        listener.onCopyUriDone(success);
+        listener.onOperationDone(this);
         dismiss();
     }
 

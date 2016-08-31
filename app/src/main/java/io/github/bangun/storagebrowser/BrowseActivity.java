@@ -1,5 +1,6 @@
 package io.github.bangun.storagebrowser;
 
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -24,11 +25,12 @@ import io.github.bangun.storagebrowser.data.TopLevelDir;
 import io.github.bangun.storagebrowser.data.repository.DefaultTopLevelRepository;
 import io.github.bangun.storagebrowser.data.repository.TopLevelDirRepository;
 import io.github.bangun.storagebrowser.fragment.BrowseFragment;
+import io.github.bangun.storagebrowser.fragment.CommonOperationListener;
 import io.github.bangun.storagebrowser.fragment.CopyUriFragment;
 
 @EActivity
 public class BrowseActivity extends AppCompatActivity
-        implements CopyUriFragment.Listener {
+        implements CommonOperationListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BrowseActivity.class);
 
@@ -77,7 +79,7 @@ public class BrowseActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCopyUriDone(boolean success) {
+    public void onOperationDone(DialogFragment fragment) {
         browseFragment.reload();
     }
 
