@@ -73,7 +73,7 @@ public class BrowseFragment extends ListFragment {
 
         Uri uri = data.getData();
         DocumentFile src = DocumentFile.fromSingleUri(getActivity(), uri);
-        Node target = current.newFile(getActivity(), src.getName(), src.getType());
+        Node target = current.newFile(src.getName(), src.getType());
 
         if (target == null) {
             // can not create new file
@@ -101,7 +101,7 @@ public class BrowseFragment extends ListFragment {
             return true;
         }
 
-        getChildrenList(getActivity(), current.getParent());
+        getChildrenList(current.getParent());
         return true;
     }
 
@@ -112,8 +112,14 @@ public class BrowseFragment extends ListFragment {
         if (current == null) {
             getTopLevelList(getActivity());
         } else {
-            getChildrenList(getActivity(), current);
+            getChildrenList(current);
         }
+    }
+
+    public void createNewDir() {
+        NewDirFragment newDirFragment = NewDirFragment.newInstance();
+        newDirFragment.setCurrentDir(current);
+        newDirFragment.show(getFragmentManager(), "new_directory");
     }
 
     @OptionsItem(R.id.refresh)
@@ -136,10 +142,10 @@ public class BrowseFragment extends ListFragment {
     }
 
     @Background
-    protected void getChildrenList(Context context, Node path) {
+    protected void getChildrenList(Node path) {
 
         logger.debug("Loading path: {}", path.getUri());
-        List<Node> children = path.list(context);
+        List<Node> children = path.list();
 
         onGetChildrenListDone(path, children);
     }
@@ -167,7 +173,7 @@ public class BrowseFragment extends ListFragment {
     private void showItem(Node item) {
         if (item.isDirectory()) {
             setListShown(false);
-            getChildrenList(getActivity(), item);
+            getChildrenList(item);
         } else {
             openFile(item);
         }
@@ -206,4 +212,5 @@ public class BrowseFragment extends ListFragment {
 
         setListShown(true);
     }
+
 }

@@ -44,8 +44,17 @@ public class DocumentFileNode implements Node {
     }
 
     @Override
-    public Node newFile(Context context, String name, String type) {
+    public Node newFile(String name, String type) {
         return new DocumentFileNode(this, file.createFile(type, name));
+    }
+
+    @Override
+    public Node newDir(String name) {
+        DocumentFile newDir = file.createDirectory(name);
+        if (newDir == null) {
+            return null;
+        }
+        return new DocumentFileNode(this, newDir);
     }
 
     @Override
@@ -59,7 +68,7 @@ public class DocumentFileNode implements Node {
     }
 
     @Override
-    public List<Node> list(Context context) {
+    public List<Node> list() {
         return getChildren(this, file);
     }
 

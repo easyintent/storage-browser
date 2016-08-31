@@ -43,8 +43,8 @@ public class DocumentFileRootNode implements Node {
     }
 
     @Override
-    public List<Node> list(Context context) {
-        return documentFileNode.list(context);
+    public List<Node> list() {
+        return documentFileNode.list();
     }
 
     @Override
@@ -63,8 +63,13 @@ public class DocumentFileRootNode implements Node {
     }
 
     @Override
-    public Node newFile(Context context, String name, String type) {
-        return documentFileNode.newFile(context, name, type);
+    public Node newFile(String name, String type) {
+        return documentFileNode.newFile(name, type);
+    }
+
+    @Override
+    public Node newDir(String name) {
+        return documentFileNode.newDir(name);
     }
 
     @Override

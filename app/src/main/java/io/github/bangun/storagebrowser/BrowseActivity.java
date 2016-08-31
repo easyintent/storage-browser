@@ -127,8 +127,7 @@ public class BrowseActivity extends AppCompatActivity
         if (browseFragment.isRoot()) {
             addRootDocument();
         } else {
-            // add file or dir
-            Toast.makeText(this, R.string.msg_can_not_create_dir, Toast.LENGTH_SHORT).show();
+            browseFragment.createNewDir();
         }
     }
 

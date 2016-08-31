@@ -9,12 +9,20 @@
     <string name="lbl_copy_from">Copy from</string>
     <string name="lbl_refresh">Refresh</string>
     <string name="lbl_copying">Copying</string>
+    <string name="lbl_new_dir">Create new directory</string>
+    <string name="lbl_default_new_dir">New Directory</string>
+    <string name="lbl_ok">OK</string>
+    <string name="lbl_cancel">Cancel</string>
 
     <string name="msg_no_app">No app to handle this intent</string>
     <string name="msg_can_not_create_dir">Create new directory not yet supported</string>
     <string name="msg_copy_done">Copy file done</string>
     <string name="msg_copy_failed">Copy file failed</string>
     <string name="msg_not_applicable_here">Not applicable on this location</string>
+    <string name="msg_no_parent">No parent directory to create folder</string>
+    <string name="msg_no_name">No name given</string>
+    <string name="msg_create_dir_ok">Directory created</string>
+    <string name="msg_create_dir_failed">Can not create directory</string>
 
     <string name="msg_add_root">Please add top level directory to start browsing</string>
 
