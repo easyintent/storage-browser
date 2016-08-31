@@ -68,6 +68,11 @@ public class DocumentFileNode implements Node {
     }
 
     @Override
+    public boolean rename(String newName) {
+        return file.renameTo(newName);
+    }
+
+    @Override
     public String getName() {
         return file.getName();
     }

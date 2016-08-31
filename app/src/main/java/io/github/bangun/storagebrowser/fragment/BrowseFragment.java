@@ -85,7 +85,9 @@ public class BrowseFragment extends ListFragment
 
     @Override
     public void onRename(Node node) {
-
+        RenameFileFragment renameFileFragment = RenameFileFragment.newInstance();
+        renameFileFragment.setTargetFile(node);
+        renameFileFragment.show(getFragmentManager(), "rename");
     }
 
     @Override

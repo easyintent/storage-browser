@@ -33,6 +33,8 @@
     <string name="msg_file_not_available">Can not find target file</string>
     <string name="msg_delete_ok">Deleted</string>
     <string name="msg_delete_failed">Can not delete this file</string>
+    <string name="msg_rename_ok">Renamed</string>
+    <string name="msg_rename_failed">Can not rename this file</string>
 
     <string name="msg_add_root">Please add top level directory to start browsing</string>
 

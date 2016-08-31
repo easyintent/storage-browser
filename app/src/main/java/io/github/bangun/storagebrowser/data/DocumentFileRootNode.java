@@ -85,6 +85,11 @@ public class DocumentFileRootNode implements TopLevelNode {
     }
 
     @Override
+    public boolean rename(String newName) {
+        return documentFileNode.rename(newName);
+    }
+
+    @Override
     public TopLevelDir getTopLevelDir() {
         return topLevelDir;
     }

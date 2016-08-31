@@ -26,4 +26,5 @@ public interface Node {
     String getType();
 
     boolean delete();
+    boolean rename(String newName);
 }
