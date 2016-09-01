@@ -9,42 +9,44 @@
 
     <FrameLayout
         android:id="@+id/content_view"
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:showIn="@layout/activity_browse"/>
+        android:layout_weight="1"/>
 
+    <View style="@style/LightHLine"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/path_background"
-        android:scrollbars="none"
-        android:layout_marginRight="@dimen/margin_medium"
         android:layout_marginLeft="@dimen/margin_medium"
-        android:fillViewport="true">
+        android:layout_marginRight="@dimen/margin_medium"
+        android:background="@color/path_background"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small">
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/all_storage_view"
-                android:textSize="@dimen/text_normal"
-                android:text="@string/lbl_storage"
-                android:layout_marginRight="@dimen/margin_tiny"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_tiny"
+                android:text="@string/lbl_storage"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_normal"/>
 
             <TextView
                 android:id="@+id/path_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:textColor="@color/text"
                 android:textSize="@dimen/text_normal"/>
         </LinearLayout>
 

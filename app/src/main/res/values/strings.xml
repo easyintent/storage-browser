@@ -12,7 +12,7 @@
     <string name="lbl_ok">OK</string>
     <string name="lbl_cancel">Cancel</string>
     <string name="lbl_confirm">Confirm</string>
-    <string name="lbl_storage">All Storage /</string>
+    <string name="lbl_storage">Home /</string>
     <string name="lbl_add_saf">Add Storage Access</string>
 
     <string name="lbl_info">Info</string>
@@ -32,7 +32,7 @@
     <string name="lbl_copy_to">Copy to</string>
     <string name="lbl_copy_from">Copy from</string>
 
-    <string name="msg_no_app">No app to handle this intent</string>
+    <string name="msg_no_app">No app to handle this file</string>
     <string name="msg_can_not_create_dir">Create new directory not yet supported</string>
     <string name="msg_copy_done">Copy file done</string>
     <string name="msg_copy_failed">Copy file failed</string>

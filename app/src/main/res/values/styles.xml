@@ -27,4 +27,10 @@
         <item name="android:maxLines">2</item>
     </style>
 
+    <style name="LightHLine">
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">#ddd</item>
+    </style>
+
 </resources>
