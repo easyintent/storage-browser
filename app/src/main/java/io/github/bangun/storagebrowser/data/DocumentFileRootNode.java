@@ -50,11 +50,6 @@ public class DocumentFileRootNode implements TopLevelNode {
     }
 
     @Override
-    public String getSummary(Context context) {
-        return context.getString(R.string.lbl_local_storage);
-    }
-
-    @Override
     public Drawable getIcon(Context context) {
         return ContextCompat.getDrawable(context, R.drawable.ic_storage);
     }
@@ -77,6 +72,11 @@ public class DocumentFileRootNode implements TopLevelNode {
     @Override
     public String getType() {
         return documentFileNode.getType();
+    }
+
+    @Override
+    public long getModified() {
+        return documentFileNode.getModified();
     }
 
     @Override

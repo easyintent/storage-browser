@@ -16,7 +16,6 @@ public interface Node {
     Node newFile(String name, String type);
     Node newDir(String name);
 
-    String getSummary(Context context);
     Drawable getIcon(Context context);
 
     List<Node> list();
@@ -24,6 +23,7 @@ public interface Node {
     long size();
     Uri getUri();
     String getType();
+    long getModified();
 
     boolean delete();
     boolean rename(String newName);

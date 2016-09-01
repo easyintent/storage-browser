@@ -4,4 +4,8 @@
     <color name="colorPrimaryDark">#3262D2</color>
     <color name="colorAccent">#66AAFF</color>
     <color name="path_background">@android:color/transparent</color>
+
+    <color name="text">#222</color>
+    <color name="text_secondary">#777</color>
+
 </resources>

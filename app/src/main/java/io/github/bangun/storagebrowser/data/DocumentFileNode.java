@@ -63,6 +63,11 @@ public class DocumentFileNode implements Node {
     }
 
     @Override
+    public long getModified() {
+        return file.lastModified();
+    }
+
+    @Override
     public boolean delete() {
         return file.delete();
     }
@@ -80,15 +85,6 @@ public class DocumentFileNode implements Node {
     @Override
     public List<Node> list() {
         return getChildren(this, file);
-    }
-
-    @Override
-    public String getSummary(Context context) {
-        if (isDirectory()) {
-            return context.getString(R.string.lbl_na);
-        }
-        String size = String.format("%,d", size());
-        return context.getString(R.string.lbl_bytes_ex, size);
     }
 
     @Override

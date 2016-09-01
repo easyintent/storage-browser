@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import io.github.bangun.storagebrowser.R;
@@ -21,10 +22,13 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
     private LayoutInflater inflater;
     private NodeActionListener listener;
 
+    private SimpleDateFormat dateFormat;
+
     public NodeListAdapter(Context context, List<T> list, NodeActionListener listener) {
         super(context, 0, 0, list);
         this.listener = listener;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     }
 
     @Override
@@ -38,7 +42,7 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
         Node node = getItem(position);
         ViewHolder holder = (ViewHolder) row.getTag();
         holder.name.setText(node.getName());
-        holder.summary.setText(node.getSummary(getContext()));
+        holder.summary.setText(dateFormat.format(node.getModified()));
         holder.icon.setImageDrawable(node.getIcon(getContext()));
 
         addListener(holder.more, node);
