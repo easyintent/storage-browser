@@ -122,6 +122,13 @@ public class BrowseFragment extends ListFragment
         startActivityForResult(intent, COPY_TO);
     }
 
+    @Override
+    public void onDetail(Node node) {
+        InfoFragment fragment = InfoFragment.newInstance();
+        fragment.setTarget(node);
+        fragment.show(getFragmentManager(), "info_fragment");
+    }
+
     private void onDirectoryEnter(Node node) {
         stack.push(node);
         browseFragmentListener.onLocationChanged(stack);

@@ -27,4 +27,10 @@
         android:orderInCategory="400"
         android:title="@string/lbl_delete"/>
 
+    <item
+        android:id="@+id/action_info"
+        app:showAsAction="never"
+        android:orderInCategory="1000"
+        android:title="@string/lbl_info"/>
+
 </menu>

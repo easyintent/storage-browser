@@ -44,11 +44,11 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
         holder.name.setText(node.getName());
         holder.summary.setText(dateFormat.format(node.getModified()));
         holder.icon.setImageDrawable(node.getIcon(getContext()));
-
         addListener(holder.more, node);
 
         return row;
     }
+
 
     private final void addListener(final View moreView, final Node node) {
         moreView.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +86,9 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
                 break;
             case R.id.action_copy_to:
                 listener.onCopy(node);
+                break;
+            case R.id.action_info:
+                listener.onDetail(node);
                 break;
         }
     }

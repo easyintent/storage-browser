@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/name_view"
         android:layout_toLeftOf="@+id/more_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_toRightOf="@id/icon_view"
@@ -30,7 +30,7 @@
 
     <TextView
         android:id="@+id/summary_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/more_view"
         android:layout_alignLeft="@id/name_view"
@@ -43,7 +43,7 @@
     <ImageView
         android:id="@+id/more_view"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
