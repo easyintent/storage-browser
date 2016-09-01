@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Stack;
 
 import io.github.bangun.storagebrowser.R;
+import io.github.bangun.storagebrowser.data.DocumentFileNode;
 import io.github.bangun.storagebrowser.data.Node;
 
 @EFragment
@@ -83,10 +84,10 @@ public class BrowseFragment extends ListFragment
 
         switch (requestCode) {
             case COPY_FROM:
-                copyFrom(data);
+                copyFromStorageAccess(data);
                 break;
             case COPY_TO:
-                copyTo(data);
+                copyToStorageAccess(data);
                 break;
         }
     }
@@ -139,11 +140,11 @@ public class BrowseFragment extends ListFragment
         browseFragmentListener.onLocationChanged(stack);
     }
 
-    private void copyFrom(Intent data) {
+    private void copyFromStorageAccess(Intent data) {
 
         Uri uri = data.getData();
-        DocumentFile src = DocumentFile.fromSingleUri(getActivity(), uri);
-        Node target = currentDir.newFile(src.getName(), src.getType());
+        DocumentFile srcDocument = DocumentFile.fromSingleUri(getActivity(), uri);
+        Node target = currentDir.newFile(srcDocument.getName(), srcDocument.getType());
 
         if (target == null) {
             // can not create new file
@@ -151,25 +152,28 @@ public class BrowseFragment extends ListFragment
             return;
         }
 
-        CopyUriFragment copyUriFragment = CopyUriFragment.newInstance(src.getUri(), target.getUri());
-        copyUriFragment.show(getFragmentManager(), "copy_fragment");
+        DocumentFileNode src = new DocumentFileNode(null, srcDocument);
+        CopyFragment copyFragment = CopyFragment.newInstance();
+        copyFragment.setFileToCopy(src, target);
+        copyFragment.show(getFragmentManager(), "copy_from_fragment");
     }
 
-
-    private void copyTo(Intent data) {
+    private void copyToStorageAccess(Intent data) {
         if (sourceFile == null) {
             // no source file
             Toast.makeText(getActivity(), R.string.msg_copy_failed, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Uri from = sourceFile.getUri();
+        Node src = sourceFile;
         sourceFile = null;  // remove cache
 
-        Uri to = data.getData();
-        CopyUriFragment copyUriFragment = CopyUriFragment.newInstance(from, to);
-        copyUriFragment.show(getFragmentManager(), "copy_fragment");
+        DocumentFile dstDocument = DocumentFile.fromSingleUri(getActivity(), data.getData());
+        DocumentFileNode dst = new DocumentFileNode(null, dstDocument);
 
+        CopyFragment copyFragment = CopyFragment.newInstance();
+        copyFragment.setFileToCopy(src, dst);
+        copyFragment.show(getFragmentManager(), "copy_to_fragment");
     }
 
     public void up() {
@@ -228,7 +232,7 @@ public class BrowseFragment extends ListFragment
     protected void getChildrenList(Node path) {
         loading = true;
 
-        logger.debug("Loading path: {}", path.getUri());
+        logger.debug("Loading children of: {}", path.getUri());
         List<Node> children = path.list();
 
         onGetChildrenListDone(path, children);

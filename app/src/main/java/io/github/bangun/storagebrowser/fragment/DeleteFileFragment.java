@@ -7,8 +7,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.Background;
@@ -24,7 +22,7 @@ import io.github.bangun.storagebrowser.data.Node;
 public class DeleteFileFragment extends DialogFragment {
 
     private static final Logger logger = LoggerFactory.getLogger(DeleteFileFragment.class);
-    private CommonOperationListener listener;
+    private OperationDoneListener listener;
 
     private Node node;
 
@@ -47,7 +45,7 @@ public class DeleteFileFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listener = (CommonOperationListener) getActivity();
+        listener = (OperationDoneListener) getActivity();
     }
 
     @Override

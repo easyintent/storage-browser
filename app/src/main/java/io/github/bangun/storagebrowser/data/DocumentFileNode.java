@@ -7,6 +7,9 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.provider.DocumentFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,6 +58,16 @@ public class DocumentFileNode implements Node {
             return null;
         }
         return new DocumentFileNode(this, newDir);
+    }
+
+    @Override
+    public InputStream openForRead(Context context) throws IOException {
+        return context.getContentResolver().openInputStream(getUri());
+    }
+
+    @Override
+    public OutputStream openForWrite(Context context) throws IOException {
+        return context.getContentResolver().openOutputStream(getUri());
     }
 
     @Override

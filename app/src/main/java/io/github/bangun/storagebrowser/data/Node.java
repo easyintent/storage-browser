@@ -5,6 +5,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public interface Node {
@@ -16,6 +19,8 @@ public interface Node {
     Node newFile(String name, String type);
     Node newDir(String name);
 
+    InputStream openForRead(Context context) throws IOException;
+    OutputStream openForWrite(Context context) throws IOException;
     Drawable getIcon(Context context);
 
     List<Node> list();

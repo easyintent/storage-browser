@@ -24,7 +24,7 @@ import io.github.bangun.storagebrowser.data.Node;
 public class NewDirFragment extends DialogFragment {
 
     private static final Logger logger = LoggerFactory.getLogger(NewDirFragment.class);
-    private CommonOperationListener listener;
+    private OperationDoneListener listener;
 
     private Node node;
 
@@ -47,7 +47,7 @@ public class NewDirFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listener = (CommonOperationListener) getActivity();
+        listener = (OperationDoneListener) getActivity();
     }
 
     @Override

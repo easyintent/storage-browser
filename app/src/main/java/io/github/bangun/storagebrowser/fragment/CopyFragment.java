@@ -4,16 +4,13 @@ package io.github.bangun.storagebrowser.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.UiThread;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -24,26 +21,29 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import io.github.bangun.storagebrowser.R;
+import io.github.bangun.storagebrowser.data.Node;
 
 @EFragment
-public class CopyUriFragment extends DialogFragment {
+public class CopyFragment extends DialogFragment {
 
-    private static final Logger logger = LoggerFactory.getLogger(CopyUriFragment.class);
-
-    private static final int MAX = 100;
-    @FragmentArg protected Uri source;
-    @FragmentArg protected Uri target;
+    private static final Logger logger = LoggerFactory.getLogger(CopyFragment.class);
 
     private boolean copying;
-    private CommonOperationListener listener;
+    private OperationDoneListener listener;
 
-    public static CopyUriFragment newInstance(Uri source, Uri target) {
-        CopyUriFragment fragment = new CopyUriFragmentEx();
+    private Node source;
+    private Node target;
+
+    public static CopyFragment newInstance() {
+        CopyFragment fragment = new CopyFragment();
         Bundle args = new Bundle();
-        args.putParcelable("source", source);
-        args.putParcelable("target", target);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setFileToCopy(Node source, Node target) {
+        this.source = source;
+        this.target = target;
     }
 
     @Override
@@ -56,10 +56,13 @@ public class CopyUriFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listener = (CommonOperationListener) getActivity();
+        listener = (OperationDoneListener) getActivity();
+        if (source == null || target == null) {
+            throw new IllegalStateException("Source and target not set yet");
+        }
         if (!copying) {
             copying = true;
-            startCopy(getActivity().getContentResolver(), source, target);
+            startCopy(getActivity(), source, target);
         }
     }
 
@@ -74,12 +77,12 @@ public class CopyUriFragment extends DialogFragment {
     }
 
     @Background
-    protected void startCopy(ContentResolver resolver, Uri src, Uri dst) {
+    protected void startCopy(Context context, Node src, Node dst) {
         InputStream is = null;
         OutputStream os = null;
         try {
-            is = resolver.openInputStream(src);
-            os = resolver.openOutputStream(dst);
+            is = src.openForRead(context);
+            os = dst.openForWrite(context);
             IOUtils.copy(is, os);
             onCopyDone(true, null);
         } catch (IOException e) {
@@ -93,6 +96,12 @@ public class CopyUriFragment extends DialogFragment {
 
     @UiThread
     protected void onCopyDone(boolean success, String message) {
+
+        if (!isAdded() || getActivity() == null) {
+            // fragment not attached
+            return;
+        }
+
         if (message != null) {
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         } else {

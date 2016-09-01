@@ -17,12 +17,12 @@ import java.util.Stack;
 import io.github.bangun.storagebrowser.data.Node;
 import io.github.bangun.storagebrowser.fragment.BrowseFragment;
 import io.github.bangun.storagebrowser.fragment.BrowseFragmentListener;
-import io.github.bangun.storagebrowser.fragment.CommonOperationListener;
+import io.github.bangun.storagebrowser.fragment.OperationDoneListener;
 import io.github.bangun.storagebrowser.fragment.TopLevelStorageFragment;
 
 @EActivity
 public class BrowseActivity extends AppCompatActivity
-        implements CommonOperationListener, BrowseFragmentListener {
+        implements OperationDoneListener, BrowseFragmentListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BrowseActivity.class);
 

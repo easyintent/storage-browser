@@ -5,6 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import io.github.bangun.storagebrowser.R;
@@ -67,6 +70,16 @@ public class DocumentFileRootNode implements TopLevelNode {
     @Override
     public Node newDir(String name) {
         return documentFileNode.newDir(name);
+    }
+
+    @Override
+    public InputStream openForRead(Context context) throws IOException {
+        return documentFileNode.openForRead(context);
+    }
+
+    @Override
+    public OutputStream openForWrite(Context context) throws IOException {
+        return documentFileNode.openForWrite(context);
     }
 
     @Override
