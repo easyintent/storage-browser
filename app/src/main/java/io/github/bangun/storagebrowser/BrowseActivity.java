@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,6 @@ public class BrowseActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse);
-
         initFragment();
     }
 
@@ -66,14 +67,6 @@ public class BrowseActivity extends AppCompatActivity
         BrowseFragment browseFragment = getBrowseFragment();
         if (browseFragment != null) {
             browseFragment.reload();
-        }
-    }
-
-    @Click(R.id.all_storage_view)
-    protected void allStorageViewClicked() {
-        BrowseFragment browseFragment = getBrowseFragment();
-        if (browseFragment != null) {
-            getFragmentManager().popBackStack();
         }
     }
 

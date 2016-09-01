@@ -183,15 +183,19 @@ public class BrowseFragment extends ListFragment
         }
 
         if (!currentDir.hasParent()) {
-            stack.clear();
-            browseFragmentListener.onLocationChanged(stack);
-            getFragmentManager().popBackStack();
+            leave();
             return;
         }
 
         onDirectoryLeave(currentDir);
         setListShown(false);
         getChildrenList(currentDir.getParent());
+    }
+
+    private void leave() {
+        stack.clear();
+        browseFragmentListener.onLocationChanged(stack);
+        getFragmentManager().popBackStack();
     }
 
     public void reload() {
@@ -226,6 +230,11 @@ public class BrowseFragment extends ListFragment
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(intent, COPY_FROM);
+    }
+
+    @OptionsItem(R.id.goto_home)
+    protected void gotoHomeClicked() {
+        leave();
     }
 
     @Background

@@ -18,8 +18,13 @@
     <item
         android:id="@+id/copy_from"
         android:title="@string/lbl_copy_from"
-        android:orderInCategory="500"
+        android:orderInCategory="300"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/goto_home"
+        android:title="@string/lbl_home"
+        android:orderInCategory="500"
+        app:showAsAction="never"/>
 
 </menu>
