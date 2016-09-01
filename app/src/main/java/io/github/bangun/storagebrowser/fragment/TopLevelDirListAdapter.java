@@ -11,24 +11,20 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import io.github.bangun.storagebrowser.R;
-import io.github.bangun.storagebrowser.data.Node;
+import io.github.bangun.storagebrowser.data.TopLevelDir;
 
-public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
+public class TopLevelDirListAdapter extends ArrayAdapter<TopLevelDir> {
 
     private LayoutInflater inflater;
-    private NodeActionListener listener;
+    private TopLevelDirActionListener listener;
 
-    private SimpleDateFormat dateFormat;
-
-    public NodeListAdapter(Context context, List<T> list, NodeActionListener listener) {
+    public TopLevelDirListAdapter(Context context, List<TopLevelDir> list, TopLevelDirActionListener listener) {
         super(context, 0, 0, list);
         this.listener = listener;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     }
 
     @Override
@@ -39,53 +35,44 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
             row.setTag(new ViewHolder(row));
         }
 
-        Node node = getItem(position);
+        Context context = getContext();
+        TopLevelDir item = getItem(position);
         ViewHolder holder = (ViewHolder) row.getTag();
-        holder.name.setText(node.getName());
-        holder.summary.setText(dateFormat.format(node.getModified()));
-        holder.icon.setImageDrawable(node.getIcon(getContext()));
+        holder.name.setText(item.getName(context));
+        holder.icon.setImageDrawable(item.getIcon(context));
+        holder.summary.setText(item.getDescription(context));
 
-        addListener(holder.more, node);
+        addListener(holder.more, item);
 
         return row;
     }
 
-    private final void addListener(final View moreView, final Node node) {
+    private final void addListener(final View moreView, final TopLevelDir item) {
         moreView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final int menu = node.isDirectory() ? R.menu.dir_popup : R.menu.file_popup;
                 final PopupMenu popup = new PopupMenu(getContext(), view);
-                popup.getMenuInflater().inflate(menu, popup.getMenu());
-                addPopupListener(popup, node);
+                popup.getMenuInflater().inflate(R.menu.top_level_popup, popup.getMenu());
+                addPopupListener(popup, item);
                 popup.show();
             }
         });
     }
 
-    private final void addPopupListener(final PopupMenu popup, final Node node) {
+    private final void addPopupListener(final PopupMenu popup, final TopLevelDir item) {
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                handleAction(item, node);
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                handleAction(menuItem, item);
                 return true;
             }
         });
     }
 
-    private void handleAction(MenuItem item, Node node) {
-        switch (item.getItemId()) {
-            case R.id.action_view:
-                listener.onView(node);
-                break;
-            case R.id.action_delete:
-                listener.onDelete(node);
-                break;
-            case R.id.action_rename:
-                listener.onRename(node);
-                break;
-            case R.id.action_copy_to:
-                listener.onCopy(node);
+    private void handleAction(MenuItem menuItem, TopLevelDir item) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_remove_from_list:
+                listener.onRemoveFromList(item);
                 break;
         }
     }

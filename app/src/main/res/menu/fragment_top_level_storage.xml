@@ -11,8 +11,8 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/add_storage"
-        android:title="@string/lbl_add_storage"
+        android:id="@+id/add_saf"
+        android:title="@string/lbl_add_saf"
         android:orderInCategory="100"
         app:showAsAction="never"/>
 

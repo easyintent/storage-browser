@@ -7,5 +7,4 @@ public interface NodeActionListener {
     void onDelete(Node node);
     void onRename(Node node);
     void onCopy(Node node);
-    void onRemoveFromList(Node node);
 }

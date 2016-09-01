@@ -122,10 +122,6 @@ public class BrowseFragment extends ListFragment
         startActivityForResult(intent, COPY_TO);
     }
 
-    @Override
-    public void onRemoveFromList(Node node) {
-    }
-
     private void onDirectoryEnter(Node node) {
         stack.push(node);
         browseFragmentListener.onLocationChanged(stack);

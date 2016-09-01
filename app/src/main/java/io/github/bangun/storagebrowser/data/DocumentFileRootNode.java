@@ -51,7 +51,7 @@ public class DocumentFileRootNode implements TopLevelNode {
 
     @Override
     public Drawable getIcon(Context context) {
-        return ContextCompat.getDrawable(context, R.drawable.ic_storage);
+        return ContextCompat.getDrawable(context, R.drawable.ic_storage_access);
     }
 
     @Override

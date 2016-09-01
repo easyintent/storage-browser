@@ -2,6 +2,7 @@ package io.github.bangun.storagebrowser.data;
 
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import java.util.Map;
 
@@ -31,5 +32,12 @@ public abstract class TopLevelDir {
         return location;
     }
 
+    public abstract String getDescription(Context context);
+
+    public abstract String getName(Context context);
+
+    public abstract Drawable getIcon(Context context);
+
     public abstract Node createNode(Context context);
+
 }

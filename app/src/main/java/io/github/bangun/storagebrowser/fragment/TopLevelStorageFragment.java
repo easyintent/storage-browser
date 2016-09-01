@@ -21,20 +21,18 @@ import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.github.bangun.storagebrowser.R;
 import io.github.bangun.storagebrowser.data.DocumentFileTopLevelDir;
-import io.github.bangun.storagebrowser.data.Node;
 import io.github.bangun.storagebrowser.data.TopLevelDir;
-import io.github.bangun.storagebrowser.data.TopLevelNode;
 import io.github.bangun.storagebrowser.data.repository.DefaultTopLevelRepository;
 import io.github.bangun.storagebrowser.data.repository.TopLevelDirRepository;
 
 @EFragment
 @OptionsMenu(R.menu.fragment_top_level_storage)
-public class TopLevelStorageFragment extends ListFragment implements NodeActionListener {
+public class TopLevelStorageFragment extends ListFragment
+        implements TopLevelDirActionListener {
 
     public static final String TAG = "top_level_storage_fragment";
     private static final Logger logger = LoggerFactory.getLogger(TopLevelStorageFragment.class);
@@ -68,32 +66,12 @@ public class TopLevelStorageFragment extends ListFragment implements NodeActionL
     }
 
     @Override
-    public void onRemoveFromList(Node node) {
-        removeTopLevelFromList(getActivity(), (TopLevelNode) node);
+    public void onRemoveFromList(TopLevelDir topLevelDir) {
+        removeTopLevelFromList(getActivity(), topLevelDir);
     }
 
-    @Override
-    public void onView(Node node) {
-
-    }
-
-    @Override
-    public void onDelete(Node node) {
-
-    }
-
-    @Override
-    public void onRename(Node node) {
-
-    }
-
-    @Override
-    public void onCopy(Node node) {
-
-    }
-
-    @OptionsItem(R.id.add_storage)
-    protected void addRootDocument() {
+    @OptionsItem(R.id.add_saf)
+    protected void addStorageAccessDocument() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         startActivityForResult(intent, PICK_ROOT_DOCUMENT);
     }
@@ -139,10 +117,10 @@ public class TopLevelStorageFragment extends ListFragment implements NodeActionL
     }
 
     @Background
-    protected void removeTopLevelFromList(Context context, TopLevelNode node) {
+    protected void removeTopLevelFromList(Context context, TopLevelDir topLevelDir) {
         loading = true;
         TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
-        repo.remove(node.getTopLevelDir());
+        repo.remove(topLevelDir);
         reloadLater();
         loading = false;
     }
@@ -161,48 +139,44 @@ public class TopLevelStorageFragment extends ListFragment implements NodeActionL
     protected void getTopLevelList(Context context) {
         loading = true;
         TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
-        List<TopLevelDir> rootDocuments = repo.listAll();
-        List<Node> topLevels = new ArrayList<>();
-        for (TopLevelDir root : rootDocuments) {
-            topLevels.add(root.createNode(context));
-        }
-        onGetChildrenListDone(null, topLevels);
+        List<TopLevelDir> topLevelDirs = repo.listAll();
+        onGetChildrenListDone(topLevelDirs);
         loading = false;
     }
 
     @UiThread
-    protected void onGetChildrenListDone(Node path, List<Node> children) {
+    protected void onGetChildrenListDone(List<TopLevelDir> topLevelDirs) {
         if (!isAdded()) {
             return;
         }
-        showList(children);
+        showList(topLevelDirs);
     }
 
-    private void onItemSelected(Node node) {
+    private void onItemSelected(TopLevelDir topLevelDir) {
         FragmentManager manager = getFragmentManager();
         BrowseFragment browseFragment = BrowseFragment.newInstance();
-        browseFragment.setCurrentDir(node);
+        browseFragment.setCurrentDir(topLevelDir.createNode(getActivity()));
         manager.beginTransaction()
                 .replace(R.id.content_view, browseFragment, BrowseFragment.TAG)
                 .addToBackStack(null)
                 .commit();
     }
 
-    private void showList(List<? extends Node> children) {
-        final NodeListAdapter adapter = new NodeListAdapter(getActivity(), children, this);
+    private void showList(List<TopLevelDir> topLevelDirs) {
+        final TopLevelDirListAdapter adapter = new TopLevelDirListAdapter(getActivity(), topLevelDirs, this);
         setListAdapter(adapter);
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Node item = (Node) adapterView.getItemAtPosition(i);
+                TopLevelDir item = (TopLevelDir) adapterView.getItemAtPosition(i);
                 if (item != null) {
                     onItemSelected(item);
                 }
             }
         });
 
-        if (children.isEmpty()) {
+        if (topLevelDirs.isEmpty()) {
             setEmptyText(getString(R.string.msg_add_root));
         }
 
