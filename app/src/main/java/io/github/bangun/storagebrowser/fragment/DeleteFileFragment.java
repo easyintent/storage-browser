@@ -51,16 +51,15 @@ public class DeleteFileFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getActivity();
+        if (node == null) {
+            throw new IllegalStateException("Target file not set");
+        }
         return new AlertDialog.Builder(context)
                 .setTitle(R.string.lbl_confirm)
                 .setMessage(R.string.msg_confirm_delete)
                 .setPositiveButton(R.string.lbl_delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (node == null) {
-                            Toast.makeText(getActivity(), R.string.msg_file_not_available, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
                         delete(node);
                     }
                 })

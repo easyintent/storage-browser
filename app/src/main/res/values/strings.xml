@@ -41,12 +41,10 @@
     <string name="msg_copy_done">Copy file done</string>
     <string name="msg_copy_failed">Copy file failed</string>
     <string name="msg_not_applicable_here">Not applicable on this location</string>
-    <string name="msg_no_parent">No parent directory to create folder</string>
     <string name="msg_no_name">No name given</string>
     <string name="msg_create_dir_ok">Directory created</string>
     <string name="msg_create_dir_failed">Can not create directory</string>
     <string name="msg_confirm_delete">Are you sure want to delete this file?</string>
-    <string name="msg_file_not_available">Can not find target file</string>
     <string name="msg_delete_ok">Deleted</string>
     <string name="msg_delete_failed">Can not delete this file</string>
     <string name="msg_rename_ok">Renamed</string>

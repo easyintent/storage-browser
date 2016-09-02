@@ -26,7 +26,7 @@ public class NewDirFragment extends DialogFragment {
     private static final Logger logger = LoggerFactory.getLogger(NewDirFragment.class);
     private OperationDoneListener listener;
 
-    private Node node;
+    private Node currentDir;
 
     public static NewDirFragment newInstance() {
         NewDirFragment fragment = new NewDirFragmentEx();
@@ -41,7 +41,7 @@ public class NewDirFragment extends DialogFragment {
     }
 
     public void setCurrentDir(Node node) {
-        this.node = node;
+        this.currentDir = node;
     }
 
     @Override
@@ -52,6 +52,9 @@ public class NewDirFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (currentDir == null) {
+            throw new IllegalStateException("Current directory is not set");
+        }
         final View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_new_dir, null);
         final EditText editText = (EditText) view.findViewById(R.id.name_view);
         final Context context = getActivity();
@@ -61,15 +64,11 @@ public class NewDirFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String name = editText.getText().toString();
-                        if (node == null) {
-                            Toast.makeText(getActivity(), R.string.msg_no_parent, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
                         if (name.length() == 0) {
                             Toast.makeText(getActivity(), R.string.msg_no_name, Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        create(node, name);
+                        create(currentDir, name);
                     }
                 })
                 .setNegativeButton(R.string.lbl_cancel, new DialogInterface.OnClickListener() {

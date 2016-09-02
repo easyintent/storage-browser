@@ -26,7 +26,7 @@ public class RenameFileFragment extends DialogFragment {
     private static final Logger logger = LoggerFactory.getLogger(RenameFileFragment.class);
     private OperationDoneListener listener;
 
-    private Node node;
+    private Node target;
 
     public static RenameFileFragment newInstance() {
         RenameFileFragment fragment = new RenameFileFragmentEx();
@@ -41,7 +41,7 @@ public class RenameFileFragment extends DialogFragment {
     }
 
     public void setTargetFile(Node node) {
-        this.node = node;
+        this.target = node;
     }
 
     @Override
@@ -52,27 +52,28 @@ public class RenameFileFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        if (target == null) {
+            throw new IllegalStateException("Target file is not set");
+        }
+
         final View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_rename, null);
         final EditText editText = (EditText) view.findViewById(R.id.name_view);
-        if (node != null) {
-            editText.setText(node.getName());
-        }
         final Context context = getActivity();
+
+        editText.setText(target.getName());
+
         return new AlertDialog.Builder(context)
                 .setTitle(R.string.lbl_rename)
                 .setPositiveButton(R.string.lbl_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String name = editText.getText().toString();
-                        if (node == null) {
-                            Toast.makeText(getActivity(), R.string.msg_file_not_available, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
                         if (name.length() == 0) {
                             Toast.makeText(getActivity(), R.string.msg_no_name, Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        rename(node, name);
+                        rename(target, name);
                     }
                 })
                 .setNegativeButton(R.string.lbl_cancel, new DialogInterface.OnClickListener() {

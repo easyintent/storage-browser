@@ -58,7 +58,7 @@ public class CopyFragment extends DialogFragment {
         super.onActivityCreated(savedInstanceState);
         listener = (OperationDoneListener) getActivity();
         if (source == null || target == null) {
-            throw new IllegalStateException("Source and target not set yet");
+            throw new IllegalStateException("Source and target not set");
         }
         if (!copying) {
             copying = true;
