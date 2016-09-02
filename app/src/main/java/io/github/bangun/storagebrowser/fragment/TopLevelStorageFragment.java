@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.provider.DocumentFile;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
@@ -60,6 +61,7 @@ public class TopLevelStorageFragment extends ListFragment
     @OptionsItem(R.id.refresh)
     public void reload() {
         if (isLoading()) {
+            Toast.makeText(getActivity(), R.string.msg_please_wait, Toast.LENGTH_SHORT).show();
             return;
         }
         setListShown(false);
@@ -106,8 +108,6 @@ public class TopLevelStorageFragment extends ListFragment
         DocumentFile document = DocumentFile.fromTreeUri(context, root);
         TopLevelDir topLevelDir = new DocumentFileTopLevelDir(document.getUri().toString());
         applyTopLevelList(Action.ADD, topLevelDir);
-
-        reload();
     }
 
     private synchronized void applyTopLevelList(Action action, TopLevelDir target) {

@@ -199,6 +199,7 @@ public class BrowseFragment extends ListFragment
     public void up() {
 
         if (isLoading()) {
+            Toast.makeText(getActivity(), R.string.msg_please_wait, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -218,9 +219,11 @@ public class BrowseFragment extends ListFragment
         getFragmentManager().popBackStack();
     }
 
+    @OptionsItem(R.id.refresh)
     public void reload() {
 
         if (isLoading()) {
+            Toast.makeText(getActivity(), R.string.msg_please_wait, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -232,11 +235,6 @@ public class BrowseFragment extends ListFragment
         NewDirFragment newDirFragment = NewDirFragment.newInstance();
         newDirFragment.setCurrentDir(currentDir);
         newDirFragment.show(getFragmentManager(), "new_directory");
-    }
-
-    @OptionsItem(R.id.refresh)
-    protected void refreshClicked() {
-        reload();
     }
 
     @OptionsItem(R.id.create_dir)
