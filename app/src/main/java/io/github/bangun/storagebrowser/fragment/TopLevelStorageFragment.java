@@ -7,17 +7,16 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.provider.DocumentFile;
 import android.view.View;
 import android.widget.AdapterView;
 
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
-import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +34,11 @@ public class TopLevelStorageFragment extends ListFragment
         implements TopLevelDirActionListener {
 
     public static final String TAG = "top_level_storage_fragment";
+
     private static final Logger logger = LoggerFactory.getLogger(TopLevelStorageFragment.class);
     private static final int PICK_ROOT_DOCUMENT = 0x00d0;
 
-    private volatile boolean loading;
+    private TopLevelStorageListLoader topLevelStorageListLoader;
 
     public static TopLevelStorageFragment newInstance() {
         return new TopLevelStorageFragmentEx();
@@ -57,23 +57,24 @@ public class TopLevelStorageFragment extends ListFragment
         reload();
     }
 
+    @OptionsItem(R.id.refresh)
     public void reload() {
-        if (loading) {
+        if (isLoading()) {
             return;
         }
         setListShown(false);
-        getTopLevelList(getActivity());
-    }
-
-    @Override
-    public void onRemoveFromList(TopLevelDir topLevelDir) {
-        removeTopLevelFromList(getActivity(), topLevelDir);
+        applyTopLevelList(Action.LIST, null);
     }
 
     @OptionsItem(R.id.add_saf)
     protected void addStorageAccessDocument() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         startActivityForResult(intent, PICK_ROOT_DOCUMENT);
+    }
+
+    @Override
+    public void onRemoveFromList(TopLevelDir topLevelDir) {
+        applyTopLevelList(Action.REMOVE, topLevelDir);
     }
 
     @Override
@@ -102,50 +103,21 @@ public class TopLevelStorageFragment extends ListFragment
 
         DocumentFile document = DocumentFile.fromTreeUri(context, root);
         TopLevelDir topLevelDir = new DocumentFileTopLevelDir(document.getUri().toString());
-        addRoot(context, topLevelDir);
+        applyTopLevelList(Action.ADD, topLevelDir);
 
         reload();
     }
 
-    @Background
-    protected void addRoot(Context context, TopLevelDir topLevelDir) {
-        loading = true;
-        TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
-        repo.add(topLevelDir);
-        reloadLater();
-        loading = false;
+    private synchronized void applyTopLevelList(Action action, TopLevelDir target) {
+        topLevelStorageListLoader = new TopLevelStorageListLoader(getActivity(), action);
+        topLevelStorageListLoader.execute(target);
     }
 
-    @Background
-    protected void removeTopLevelFromList(Context context, TopLevelDir topLevelDir) {
-        loading = true;
-        TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
-        repo.remove(topLevelDir);
-        reloadLater();
-        loading = false;
+    private synchronized boolean isLoading() {
+        return (topLevelStorageListLoader != null && topLevelStorageListLoader.isLoading());
     }
 
-    @UiThread
-    protected void reloadLater() {
-        reload();
-    }
-
-    @OptionsItem(R.id.refresh)
-    protected void refreshClicked() {
-        reload();
-    }
-
-    @Background
-    protected void getTopLevelList(Context context) {
-        loading = true;
-        TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
-        List<TopLevelDir> topLevelDirs = repo.listAll();
-        onGetChildrenListDone(topLevelDirs);
-        loading = false;
-    }
-
-    @UiThread
-    protected void onGetChildrenListDone(List<TopLevelDir> topLevelDirs) {
+    private void onLoadChildrenListDone(List<TopLevelDir> topLevelDirs) {
         if (!isAdded()) {
             return;
         }
@@ -183,4 +155,52 @@ public class TopLevelStorageFragment extends ListFragment
         setListShown(true);
     }
 
+
+    private enum Action { LIST, ADD, REMOVE };
+
+    private class TopLevelStorageListLoader extends AsyncTask<TopLevelDir,Object,List<TopLevelDir>> {
+
+        private boolean loading;
+        private Context context;
+        private Action action;
+
+        public TopLevelStorageListLoader(Context context, Action action) {
+            this.context = context;
+            this.action = action;
+        }
+
+        public boolean isLoading() {
+            return loading;
+        }
+
+        @Override
+        protected List<TopLevelDir> doInBackground(TopLevelDir... topLevelDirs) {
+            loading = true;
+
+            TopLevelDirRepository repo = new DefaultTopLevelRepository(context);
+            switch (action) {
+                case ADD:
+                    repo.add(topLevelDirs[0]);
+                    break;
+
+                case REMOVE:
+                    repo.remove(topLevelDirs[0]);
+                    break;
+
+                case LIST:
+                    // will always list children
+                    break;
+            }
+
+            List<TopLevelDir> list = repo.listAll();;
+
+            loading = false;
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(List<TopLevelDir> topLevelDirs) {
+            onLoadChildrenListDone(topLevelDirs);
+        }
+    }
 }

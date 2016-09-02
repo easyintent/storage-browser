@@ -5,6 +5,7 @@ import android.app.ListFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.provider.DocumentFile;
@@ -12,11 +13,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
-import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +32,7 @@ public class BrowseFragment extends ListFragment
         implements NodeActionListener {
 
     public static final String TAG = "browse_fragment";
+
     private static final Logger logger = LoggerFactory.getLogger(BrowseFragment.class);
 
     private static final int COPY_FROM = 0x10c0;
@@ -40,7 +40,7 @@ public class BrowseFragment extends ListFragment
 
     private Node currentDir;
     private Stack<Node> stack;
-    private volatile boolean loading;
+    private ChildrenListLoader childrenListLoader;
 
     // source file to copy
     private Node sourceFile;
@@ -178,7 +178,7 @@ public class BrowseFragment extends ListFragment
 
     public void up() {
 
-        if (loading) {
+        if (isLoading()) {
             return;
         }
 
@@ -189,7 +189,7 @@ public class BrowseFragment extends ListFragment
 
         onDirectoryLeave(currentDir);
         setListShown(false);
-        getChildrenList(currentDir.getParent());
+        loadChildren(currentDir.getParent());
     }
 
     private void leave() {
@@ -200,12 +200,12 @@ public class BrowseFragment extends ListFragment
 
     public void reload() {
 
-        if (loading) {
+        if (isLoading()) {
             return;
         }
 
         setListShown(false);
-        getChildrenList(currentDir);
+        loadChildren(currentDir);
     }
 
     public void createNewDir() {
@@ -237,19 +237,16 @@ public class BrowseFragment extends ListFragment
         leave();
     }
 
-    @Background
-    protected void getChildrenList(Node path) {
-        loading = true;
-
-        logger.debug("Loading children of: {}", path.getUri());
-        List<Node> children = path.list();
-
-        onGetChildrenListDone(path, children);
-        loading = false;
+    private synchronized void loadChildren(Node path) {
+        childrenListLoader = new ChildrenListLoader(path);
+        childrenListLoader.execute();
     }
 
-    @UiThread
-    protected void onGetChildrenListDone(Node path, List<Node> children) {
+    private synchronized boolean isLoading() {
+        return childrenListLoader != null && childrenListLoader.isLoading();
+    }
+
+    private void onLoadChildrenListDone(Node path, List<Node> children) {
         this.currentDir = path;
         if (!isAdded()) {
             return;
@@ -260,7 +257,7 @@ public class BrowseFragment extends ListFragment
     private void onItemSelected(Node item) {
         if (item.isDirectory()) {
             setListShown(false);
-            getChildrenList(item);
+            loadChildren(item);
             onDirectoryEnter(item);
         } else {
             openFile(item);
@@ -300,4 +297,31 @@ public class BrowseFragment extends ListFragment
         setListShown(true);
     }
 
+    private class ChildrenListLoader extends AsyncTask<Object,Object,List<Node>> {
+
+        private boolean loading;
+        private Node path;
+
+        public ChildrenListLoader(Node path) {
+            this.path = path;
+        }
+
+        public boolean isLoading() {
+            return loading;
+        }
+
+        @Override
+        protected List<Node> doInBackground(Object... params) {
+            loading = true;
+            //logger.debug("Loading children of: {}", path.getUri());
+            List<Node> children = path.list();
+            loading = false;
+            return children;
+        }
+
+        @Override
+        protected void onPostExecute(List<Node> nodes) {
+            onLoadChildrenListDone(path, nodes);
+        }
+    }
 }
