@@ -96,10 +96,12 @@ public class TopLevelStorageFragment extends ListFragment
         Context context = getActivity();
         Uri root = data.getData();
 
-        logger.debug("Picked root uri: {}", root);
-
         ContentResolver resolver = context.getContentResolver();
-        resolver.takePersistableUriPermission(root, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+        int flags = data.getFlags()
+                & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        resolver.takePersistableUriPermission(root, flags);
 
         DocumentFile document = DocumentFile.fromTreeUri(context, root);
         TopLevelDir topLevelDir = new DocumentFileTopLevelDir(document.getUri().toString());
@@ -182,11 +184,9 @@ public class TopLevelStorageFragment extends ListFragment
                 case ADD:
                     repo.add(topLevelDirs[0]);
                     break;
-
                 case REMOVE:
                     repo.remove(topLevelDirs[0]);
                     break;
-
                 case LIST:
                     // will always list children
                     break;

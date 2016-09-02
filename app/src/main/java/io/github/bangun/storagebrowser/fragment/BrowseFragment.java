@@ -115,12 +115,18 @@ public class BrowseFragment extends ListFragment
     //
     @Override
     public void onCopy(Node node) {
+
         this.sourceFile = node;
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.putExtra(Intent.EXTRA_TITLE, node.getName());
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
-        startActivityForResult(intent, COPY_TO);
+
+        try {
+            startActivityForResult(intent, COPY_TO);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getActivity(), R.string.msg_no_picker, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -226,10 +232,16 @@ public class BrowseFragment extends ListFragment
 
     @OptionsItem(R.id.copy_from)
     protected void copyFromClicked() {
+
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(intent, COPY_FROM);
+
+        try {
+            startActivityForResult(intent, COPY_FROM);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getActivity(), R.string.msg_no_picker, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OptionsItem(R.id.goto_home)
@@ -256,12 +268,16 @@ public class BrowseFragment extends ListFragment
 
     private void onItemSelected(Node item) {
         if (item.isDirectory()) {
-            setListShown(false);
-            loadChildren(item);
-            onDirectoryEnter(item);
+            openDir(item);
         } else {
             openFile(item);
         }
+    }
+
+    private void openDir(Node item) {
+        setListShown(false);
+        loadChildren(item);
+        onDirectoryEnter(item);
     }
 
     private void openFile(Node item) {
