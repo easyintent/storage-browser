@@ -90,6 +90,9 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
             case R.id.action_info:
                 listener.onDetail(node);
                 break;
+            case R.id.action_share:
+                listener.onShare(node);
+                break;
         }
     }
 

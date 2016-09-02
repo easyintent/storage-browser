@@ -26,6 +26,7 @@
     <string name="lbl_mb">MB</string>
 
     <string name="lbl_view">Open</string>
+    <string name="lbl_share">Share</string>
     <string name="lbl_delete">Delete</string>
     <string name="lbl_rename">Rename</string>
     <string name="lbl_remove_from_list">Remove from list</string>

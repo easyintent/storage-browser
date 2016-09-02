@@ -8,4 +8,5 @@ public interface NodeActionListener {
     void onRename(Node node);
     void onCopy(Node node);
     void onDetail(Node node);
+    void onShare(Node node);
 }

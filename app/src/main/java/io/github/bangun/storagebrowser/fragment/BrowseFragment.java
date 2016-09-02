@@ -136,6 +136,20 @@ public class BrowseFragment extends ListFragment
         fragment.show(getFragmentManager(), "info_fragment");
     }
 
+    @Override
+    public void onShare(Node node) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_STREAM, node.getUri());
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getActivity(), R.string.msg_no_app, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void onDirectoryEnter(Node node) {
         stack.push(node);
         browseFragmentListener.onLocationChanged(stack);
