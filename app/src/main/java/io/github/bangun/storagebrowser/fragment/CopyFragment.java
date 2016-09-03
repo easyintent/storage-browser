@@ -35,7 +35,7 @@ public class CopyFragment extends DialogFragment {
     private Node target;
 
     public static CopyFragment newInstance() {
-        CopyFragment fragment = new CopyFragment();
+        CopyFragment fragment = new CopyFragmentEx();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -57,6 +57,11 @@ public class CopyFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listener = (OperationDoneListener) getActivity();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (source == null || target == null) {
             throw new IllegalStateException("Source and target not set");
         }
