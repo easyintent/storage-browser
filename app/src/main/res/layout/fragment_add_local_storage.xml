@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_medium">
+        android:orientation="vertical">
 
         <TextView
             style="@style/LabelText"
@@ -25,20 +24,60 @@
 
         <TextView
             style="@style/LabelText"
-            android:text="@string/lbl_sub_dir"/>
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="@string/lbl_location"/>
 
-        <EditText
-            android:id="@+id/sub_dir_view"
+        <RadioGroup
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:hint="@string/lbl_sub_dir_hint"/>
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:checked="true"
+                android:id="@+id/shared_storage_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_shared_storage"/>
+
+            <RadioButton
+                android:id="@+id/advanced_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_advanced_location"/>
+
+        </RadioGroup>
+
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/advanced_group"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/any_dir_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:hint="@string/lbl_any_dir_hint"/>
+
+            <TextView
+                android:background="@color/warn"
+                android:textSize="@dimen/text_normal"
+                android:layout_margin="@dimen/margin_medium"
+                android:text="@string/msg_any_dir_warning"
+                android:padding="@dimen/margin_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
         <Button
+            android:layout_marginTop="@dimen/margin_medium"
             android:id="@+id/save_button"
-            android:text="@string/lbl_save"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_save"/>
 
     </LinearLayout>
 </ScrollView>

@@ -17,11 +17,13 @@
     <string name="lbl_add_local_storage">Add Internal Storage</string>
     <string name="lbl_local_storage">Internal Storage</string>
     <string name="lbl_internal_storage">Device Storage</string>
-    <string name="lbl_sub_dir">Directory</string>
-    <string name="lbl_sub_dir_hint">e.g. DCIM, or leave empty</string>
     <string name="lbl_deleting">Deleting</string>
     <string name="lbl_save">Save</string>
     <string name="lbl_required">Required</string>
+
+    <string name="lbl_shared_storage">Device shared storage</string>
+    <string name="lbl_advanced_location">Arbitrary path (advanced)</string>
+    <string name="lbl_any_dir_hint">absolute path</string>
 
     <string name="lbl_info">Info</string>
     <string name="lbl_name">Name</string>
@@ -62,5 +64,6 @@
     <string name="msg_location_does_not_exist">Location does not exist</string>
     <string name="msg_add_root">Add new storage from menu to start browsing</string>
     <string name="msg_please_grant_permission">Please grant permission</string>
+    <string name="msg_any_dir_warning">Some location might be read-only or inaccessible. If you want to modify your SD Card please add storage access instead.</string>
 
 </resources>

@@ -8,4 +8,6 @@
     <color name="text">#222</color>
     <color name="text_secondary">#777</color>
 
+    <color name="warn">#EBCDCD</color>
+
 </resources>
