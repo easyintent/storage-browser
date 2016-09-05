@@ -81,14 +81,12 @@ public class CopyFragment extends DialogFragment {
 
     @Background
     protected void startCopy(Context context, Node src, Node dst) {
-        logger.debug("copying...");
         InputStream is = null;
         OutputStream os = null;
         try {
             is = src.openForRead(context);
             os = dst.openForWrite(context);
             IOUtils.copy(is, os);
-            logger.debug("copy done");
             onCopyDone(true, null);
         } catch (IOException e) {
             logger.debug("Failed to copy", e);
@@ -97,13 +95,12 @@ public class CopyFragment extends DialogFragment {
             IOUtils.closeQuietly(is);
             IOUtils.closeQuietly(os);
         }
-        logger.debug("leave");
     }
 
     @UiThread
     protected void onCopyDone(boolean success, String message) {
 
-        if (!isAdded() || getActivity() == null) {
+        if (!isAdded()) {
             // fragment not attached
             return;
         }

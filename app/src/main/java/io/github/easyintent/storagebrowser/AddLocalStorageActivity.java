@@ -29,7 +29,5 @@ public class AddLocalStorageActivity extends AppCompatActivity {
         fm.beginTransaction()
                 .replace(R.id.content_view, addLocalStorageFragment, "add_local_storage")
                 .commit();
-
-
     }
 }

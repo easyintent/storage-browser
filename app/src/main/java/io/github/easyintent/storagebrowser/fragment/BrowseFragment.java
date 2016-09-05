@@ -109,12 +109,12 @@ public class BrowseFragment extends ListFragment
         renameFileFragment.show(getFragmentManager(), "rename");
     }
 
-    // copy to ..
-    //
     @Override
     public void onCopy(Node node) {
 
+        // copy this file to ..
         this.sourceFile = node;
+
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.putExtra(Intent.EXTRA_TITLE, node.getName());
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -146,6 +146,71 @@ public class BrowseFragment extends ListFragment
         } catch (ActivityNotFoundException e) {
             Toast.makeText(getActivity(), R.string.msg_no_app, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void up() {
+
+        if (isLoading()) {
+            Toast.makeText(getActivity(), R.string.msg_please_wait, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!currentDir.hasParent()) {
+            leave();
+            return;
+        }
+
+        onDirectoryLeave(currentDir);
+        setListShown(false);
+        loadChildren(currentDir.getParent());
+    }
+
+    @OptionsItem(R.id.refresh)
+    public void reload() {
+
+        if (isLoading()) {
+            Toast.makeText(getActivity(), R.string.msg_please_wait, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        setListShown(false);
+        loadChildren(currentDir);
+    }
+
+    @OptionsItem(R.id.create_dir)
+    protected void createDirClicked() {
+        createNewDir();
+    }
+
+    @OptionsItem(R.id.copy_from)
+    protected void copyFromClicked() {
+
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        try {
+            startActivityForResult(intent, COPY_FROM);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getActivity(), R.string.msg_no_picker, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OptionsItem(R.id.goto_home)
+    protected void gotoHomeClicked() {
+        leave();
+    }
+
+    private void createNewDir() {
+        NewDirFragment newDirFragment = NewDirFragment.newInstance();
+        newDirFragment.setCurrentDir(currentDir);
+        newDirFragment.show(getFragmentManager(), "new_directory");
+    }
+
+    private void leave() {
+        stack.clear();
+        browseFragmentListener.onLocationChanged(stack);
+        getFragmentManager().popBackStack();
     }
 
     private void onDirectoryEnter(Node node) {
@@ -192,71 +257,6 @@ public class BrowseFragment extends ListFragment
         CopyFragment copyFragment = CopyFragment.newInstance();
         copyFragment.setFileToCopy(src, dst);
         copyFragment.show(getFragmentManager(), "copy_to_fragment");
-    }
-
-    public void up() {
-
-        if (isLoading()) {
-            Toast.makeText(getActivity(), R.string.msg_please_wait, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!currentDir.hasParent()) {
-            leave();
-            return;
-        }
-
-        onDirectoryLeave(currentDir);
-        setListShown(false);
-        loadChildren(currentDir.getParent());
-    }
-
-    private void leave() {
-        stack.clear();
-        browseFragmentListener.onLocationChanged(stack);
-        getFragmentManager().popBackStack();
-    }
-
-    @OptionsItem(R.id.refresh)
-    public void reload() {
-
-        if (isLoading()) {
-            Toast.makeText(getActivity(), R.string.msg_please_wait, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        setListShown(false);
-        loadChildren(currentDir);
-    }
-
-    public void createNewDir() {
-        NewDirFragment newDirFragment = NewDirFragment.newInstance();
-        newDirFragment.setCurrentDir(currentDir);
-        newDirFragment.show(getFragmentManager(), "new_directory");
-    }
-
-    @OptionsItem(R.id.create_dir)
-    protected void createDirClicked() {
-        createNewDir();
-    }
-
-    @OptionsItem(R.id.copy_from)
-    protected void copyFromClicked() {
-
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        try {
-            startActivityForResult(intent, COPY_FROM);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(getActivity(), R.string.msg_no_picker, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @OptionsItem(R.id.goto_home)
-    protected void gotoHomeClicked() {
-        leave();
     }
 
     private synchronized void loadChildren(Node path) {
@@ -323,7 +323,7 @@ public class BrowseFragment extends ListFragment
         setListShown(true);
     }
 
-    private class ChildrenListLoader extends AsyncTask<Object,Object,List<Node>> {
+    final private class ChildrenListLoader extends AsyncTask<Object,Object,List<Node>> {
 
         private boolean loading;
         private Node path;
@@ -339,7 +339,6 @@ public class BrowseFragment extends ListFragment
         @Override
         protected List<Node> doInBackground(Object... params) {
             loading = true;
-            //logger.debug("Loading children of: {}", path.getUri());
             List<Node> children = path.list();
             Collections.sort(children, new NodeComparator());
             loading = false;

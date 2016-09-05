@@ -111,17 +111,10 @@ public class TopLevelStorageFragment extends ListFragment
         }
     }
 
-    private void addLocalStorage() {
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), AddLocalStorageActivity.class);
-        startActivityForResult(intent, ADD_LOCAL_STORAGE);
-    }
-
     @Override
     public void onRemoveFromList(TopLevelDir topLevelDir) {
         applyTopLevelList(Action.REMOVE, topLevelDir);
     }
-
 
     @OnActivityResult(PICK_ROOT_DOCUMENT)
     protected void documentPicked(int resultCode, Intent data) {
@@ -158,6 +151,12 @@ public class TopLevelStorageFragment extends ListFragment
         Uri uri = data.getData();
         TopLevelDir topLevelDir = new LocalFileTopLevelDir(uri.toString(), params);
         applyTopLevelList(Action.ADD, topLevelDir);
+    }
+
+    private void addLocalStorage() {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), AddLocalStorageActivity.class);
+        startActivityForResult(intent, ADD_LOCAL_STORAGE);
     }
 
     private synchronized void applyTopLevelList(Action action, TopLevelDir target) {
@@ -210,7 +209,7 @@ public class TopLevelStorageFragment extends ListFragment
 
     private enum Action { LIST, ADD, REMOVE };
 
-    private class TopLevelStorageListLoader extends AsyncTask<TopLevelDir,Object,List<TopLevelDir>> {
+    private final class TopLevelStorageListLoader extends AsyncTask<TopLevelDir,Object,List<TopLevelDir>> {
 
         private boolean loading;
         private Context context;
