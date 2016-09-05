@@ -6,7 +6,7 @@ android {
     buildToolsVersion "24.0.1"
 
     defaultConfig {
-        applicationId "io.github.bangun.storagebrowser"
+        applicationId "io.github.easyintent.storagebrowser"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
