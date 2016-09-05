@@ -52,7 +52,7 @@ public class BrowseActivity extends AppCompatActivity
         for (Node node : nodes) {
             sb.append(node.getName()).append(" / ");
         }
-        pathView.setText(sb);
+        pathView.setText(sb.length() != 0 ? sb : getString(R.string.lbl_all_storage));
     }
 
     @Override

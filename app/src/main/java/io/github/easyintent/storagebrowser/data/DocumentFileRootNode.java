@@ -16,10 +16,12 @@ public class DocumentFileRootNode implements TopLevelNode {
 
     private DocumentFileNode documentFileNode;
     private TopLevelDir topLevelDir;
+    private String displayName;
 
-    public DocumentFileRootNode(TopLevelDir topLevelDir, DocumentFileNode documentFileNode) {
+    public DocumentFileRootNode(TopLevelDir topLevelDir, DocumentFileNode documentFileNode, String displayName) {
         this.documentFileNode = documentFileNode;
         this.topLevelDir = topLevelDir;
+        this.displayName = displayName;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class DocumentFileRootNode implements TopLevelNode {
 
     @Override
     public String getName() {
-        return documentFileNode.getName();
+        return displayName;
     }
 
     @Override

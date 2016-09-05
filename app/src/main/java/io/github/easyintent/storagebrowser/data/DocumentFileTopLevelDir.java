@@ -23,7 +23,7 @@ public class DocumentFileTopLevelDir extends TopLevelDir {
 
     @Override
     public String getName(Context context) {
-        return Uri.parse(getUri()).getLastPathSegment();
+        return getDisplayName();
     }
 
     @Override
@@ -34,6 +34,10 @@ public class DocumentFileTopLevelDir extends TopLevelDir {
     @Override
     public Node createNode(Context context) {
         DocumentFile file = DocumentFile.fromTreeUri(context, Uri.parse(getUri()));
-        return new DocumentFileRootNode(this, new DocumentFileNode(null, file));
+        return new DocumentFileRootNode(this, new DocumentFileNode(null, file), getDisplayName());
+    }
+
+    private String getDisplayName() {
+        return Uri.parse(getUri()).getLastPathSegment();
     }
 }

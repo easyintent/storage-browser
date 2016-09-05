@@ -14,10 +14,12 @@ public class LocalFileRootNode implements TopLevelNode {
 
     private LocalFileTopLevelDir topLevelDir;
     private LocalFileNode fileNode;
+    private String displayName;
 
-    public LocalFileRootNode(LocalFileNode fileNode, LocalFileTopLevelDir topLevelDir) {
+    public LocalFileRootNode(LocalFileTopLevelDir topLevelDir, LocalFileNode fileNode, String displayName) {
         this.topLevelDir = topLevelDir;
         this.fileNode = fileNode;
+        this.displayName = displayName;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class LocalFileRootNode implements TopLevelNode {
 
     @Override
     public String getName() {
-        return fileNode.getName();
+        return displayName;
     }
 
     @Override

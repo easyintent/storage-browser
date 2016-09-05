@@ -33,14 +33,6 @@
             android:paddingTop="@dimen/margin_small">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/margin_tiny"
-                android:text="@string/lbl_all_storage"
-                android:textColor="@color/text"
-                android:textSize="@dimen/text_normal"/>
-
-            <TextView
                 android:id="@+id/path_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

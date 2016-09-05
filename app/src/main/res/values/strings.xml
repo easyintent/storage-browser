@@ -12,7 +12,7 @@
     <string name="lbl_ok">OK</string>
     <string name="lbl_cancel">Cancel</string>
     <string name="lbl_confirm">Confirm</string>
-    <string name="lbl_all_storage">Home /</string>
+    <string name="lbl_all_storage">Home</string>
     <string name="lbl_add_saf">Add Storage Access</string>
     <string name="lbl_add_local_storage">Add Internal Storage</string>
     <string name="lbl_local_storage">Internal Storage</string>

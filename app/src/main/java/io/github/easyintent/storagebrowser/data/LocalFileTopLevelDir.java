@@ -26,11 +26,7 @@ public class LocalFileTopLevelDir extends TopLevelDir {
 
     @Override
     public String getName(Context context) {
-        String name = getParams().get(DISPLAY_NAME);
-        if (name != null) {
-            return name;
-        }
-        return Uri.parse(getUri()).getLastPathSegment();
+        return getDisplayName();
     }
 
     @Override
@@ -41,6 +37,14 @@ public class LocalFileTopLevelDir extends TopLevelDir {
     @Override
     public Node createNode(Context context) {
         File file = new File(Uri.parse(getUri()).getPath());
-        return new LocalFileRootNode(new LocalFileNode(null, file), this);
+        return new LocalFileRootNode(this, new LocalFileNode(null, file), getDisplayName());
+    }
+
+    private String getDisplayName() {
+        String name = getParams().get(DISPLAY_NAME);
+        if (name != null) {
+            return name;
+        }
+        return Uri.parse(getUri()).getLastPathSegment();
     }
 }

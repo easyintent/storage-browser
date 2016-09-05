@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.webkit.MimeTypeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,12 +51,12 @@ public class LocalFileNode implements Node {
 
     @Override
     public Node newFile(String name, String type) {
-        File newDir = new File(file, name);
-        if (newDir.exists()) {
+        File newFile = new File(file, name);
+        if (newFile.exists()) {
             logger.debug("File already exists: {}", name);
             return null;
         }
-        return new LocalFileNode(this, newDir);
+        return new LocalFileNode(this, newFile);
     }
 
     @Override
@@ -63,6 +64,9 @@ public class LocalFileNode implements Node {
         File newDir = new File(file, name);
         if (newDir.exists()) {
             logger.debug("Directory already exists: {}", name);
+            return null;
+        }
+        if (!newDir.mkdir()) {
             return null;
         }
         return new LocalFileNode(this, newDir);
@@ -116,8 +120,12 @@ public class LocalFileNode implements Node {
 
     @Override
     public String getType() {
-        // fixme
-        return "application/octet-stream";
+        String ext = MimeTypeMap.getFileExtensionFromUrl(getUri().toString());
+        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+        if (mime == null) {
+            mime = "application/octet-stream";
+        }
+        return mime;
     }
 
     @Override
