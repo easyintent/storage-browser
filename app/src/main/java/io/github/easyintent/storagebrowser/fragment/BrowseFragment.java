@@ -16,8 +16,6 @@ import android.widget.Toast;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Stack;
@@ -32,8 +30,6 @@ public class BrowseFragment extends ListFragment
         implements NodeActionListener {
 
     public static final String TAG = "browse_fragment";
-
-    private static final Logger logger = LoggerFactory.getLogger(BrowseFragment.class);
 
     private static final int COPY_FROM = 0x10c0;
     private static final int COPY_TO   = 0x10c1;
@@ -99,9 +95,9 @@ public class BrowseFragment extends ListFragment
 
     @Override
     public void onDelete(Node node) {
-        DeleteFileFragment deleteFileFragment = DeleteFileFragment.newInstance();
-        deleteFileFragment.setTargetFile(node);
-        deleteFileFragment.show(getFragmentManager(), "confirm_delete");
+        ConfirmDeleteFileFragment confirmDeleteFileFragment = ConfirmDeleteFileFragment.newInstance();
+        confirmDeleteFileFragment.setTargetFile(node);
+        confirmDeleteFileFragment.show(getFragmentManager(), "confirm_delete");
     }
 
     @Override

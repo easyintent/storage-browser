@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Stack;
 
@@ -22,8 +20,6 @@ import io.github.easyintent.storagebrowser.fragment.TopLevelStorageFragment;
 @EActivity
 public class BrowseActivity extends AppCompatActivity
         implements OperationDoneListener, BrowseFragmentListener {
-
-    private static final Logger logger = LoggerFactory.getLogger(BrowseActivity.class);
 
     @ViewById protected TextView pathView;
 

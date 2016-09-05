@@ -36,8 +36,6 @@ public class CopyFragment extends DialogFragment {
 
     public static CopyFragment newInstance() {
         CopyFragment fragment = new CopyFragmentEx();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 
