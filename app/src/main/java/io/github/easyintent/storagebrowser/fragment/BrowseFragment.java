@@ -17,12 +17,14 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
 import io.github.easyintent.storagebrowser.R;
 import io.github.easyintent.storagebrowser.data.DocumentFileNode;
 import io.github.easyintent.storagebrowser.data.Node;
+import io.github.easyintent.storagebrowser.data.NodeComparator;
 
 @EFragment
 @OptionsMenu(R.menu.fragment_browse)
@@ -339,6 +341,7 @@ public class BrowseFragment extends ListFragment
             loading = true;
             //logger.debug("Loading children of: {}", path.getUri());
             List<Node> children = path.list();
+            Collections.sort(children, new NodeComparator());
             loading = false;
             return children;
         }

@@ -14,10 +14,18 @@
     <string name="lbl_confirm">Confirm</string>
     <string name="lbl_all_storage">Home /</string>
     <string name="lbl_add_saf">Add Storage Access</string>
+    <string name="lbl_add_local_storage">Add Internal Storage</string>
+    <string name="lbl_local_storage">Internal Storage</string>
+    <string name="lbl_internal_storage">Device Storage</string>
+    <string name="lbl_sub_dir">Directory</string>
+    <string name="lbl_sub_dir_hint">e.g. DCIM, or leave empty</string>
     <string name="lbl_deleting">Deleting</string>
+    <string name="lbl_save">Save</string>
+    <string name="lbl_required">Required</string>
 
     <string name="lbl_info">Info</string>
     <string name="lbl_name">Name</string>
+    <string name="lbl_display_name">Display Name</string>
     <string name="lbl_location">Location</string>
     <string name="lbl_size">Size</string>
     <string name="lbl_type">Type</string>
@@ -51,7 +59,8 @@
     <string name="msg_rename_ok">Renamed</string>
     <string name="msg_rename_failed">Can not rename this file</string>
     <string name="msg_please_wait">Please wait</string>
-
+    <string name="msg_location_does_not_exist">Location does not exist</string>
     <string name="msg_add_root">Add new storage from menu to start browsing</string>
+    <string name="msg_please_grant_permission">Please grant permission</string>
 
 </resources>

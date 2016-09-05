@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import io.github.easyintent.storagebrowser.R;
@@ -97,7 +96,12 @@ public class DocumentFileNode implements Node {
 
     @Override
     public List<Node> list() {
-        return getChildren(this, file);
+        DocumentFile[] files = file.listFiles();
+        List<Node> nodeList = new ArrayList<>();
+        for (DocumentFile file : files) {
+            nodeList.add(new DocumentFileNode(parent, file));
+        }
+        return nodeList;
     }
 
     @Override
@@ -114,13 +118,4 @@ public class DocumentFileNode implements Node {
         return parent;
     }
 
-    public static List<Node> getChildren(Node parent, DocumentFile documentFile) {
-        DocumentFile[] files = documentFile.listFiles();
-        List<Node> nodeList = new ArrayList<>();
-        for (DocumentFile file : files) {
-            nodeList.add(new DocumentFileNode(parent, file));
-        }
-        Collections.sort(nodeList, new NodeComparator());
-        return nodeList;
-    }
 }

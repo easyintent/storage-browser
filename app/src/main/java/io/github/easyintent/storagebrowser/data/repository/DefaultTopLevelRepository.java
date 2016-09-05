@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.easyintent.storagebrowser.data.DocumentFileTopLevelDir;
+import io.github.easyintent.storagebrowser.data.LocalFileTopLevelDir;
 import io.github.easyintent.storagebrowser.data.StorageLocation;
 import io.github.easyintent.storagebrowser.data.TopLevelDir;
 
@@ -68,6 +69,9 @@ public class DefaultTopLevelRepository implements TopLevelDirRepository {
         switch (location) {
             case DOCUMENT_FILE:
                 dir = gson.fromJson(jsonObject, DocumentFileTopLevelDir.class);
+                break;
+            case LOCAL_STORAGE:
+                dir = gson.fromJson(jsonObject, LocalFileTopLevelDir.class);
                 break;
             default:
                 throw new UnsupportedOperationException("Location is not supported yet:" + location);
