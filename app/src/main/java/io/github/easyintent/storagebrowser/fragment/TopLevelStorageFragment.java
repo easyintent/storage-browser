@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.slf4j.Logger;
@@ -79,21 +80,14 @@ public class TopLevelStorageFragment extends ListFragment
         applyTopLevelList(Action.REMOVE, topLevelDir);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    @OnActivityResult(PICK_ROOT_DOCUMENT)
+    protected void documentPicked(int resultCode, Intent data) {
+
         if (resultCode != Activity.RESULT_OK) {
             // do not care if cancelled
             return;
         }
-
-        switch (requestCode) {
-            case PICK_ROOT_DOCUMENT:
-                documentPicked(data);
-                break;
-        }
-    }
-
-    private void documentPicked(Intent data) {
 
         Context context = getActivity();
         Uri root = data.getData();
