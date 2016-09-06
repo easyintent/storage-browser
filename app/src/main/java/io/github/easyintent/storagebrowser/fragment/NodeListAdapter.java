@@ -96,7 +96,7 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
         }
     }
 
-    final static class ViewHolder {
+    static final class ViewHolder {
         TextView name;
         TextView summary;
         ImageView icon;

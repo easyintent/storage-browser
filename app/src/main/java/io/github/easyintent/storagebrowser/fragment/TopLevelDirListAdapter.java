@@ -77,7 +77,7 @@ public class TopLevelDirListAdapter extends ArrayAdapter<TopLevelDir> {
         }
     }
 
-    final static class ViewHolder {
+    static final class ViewHolder {
         TextView name;
         TextView summary;
         ImageView icon;

@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 
@@ -72,22 +73,6 @@ public class BrowseFragment extends ListFragment
         browseFragmentListener = (BrowseFragmentListener) getActivity();
         browseFragmentListener.onLocationChanged(stack);
         reload();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-
-        switch (requestCode) {
-            case COPY_FROM:
-                copyFromStorageAccess(data);
-                break;
-            case COPY_TO:
-                copyToStorageAccess(data);
-                break;
-        }
     }
 
     @Override
@@ -201,6 +186,51 @@ public class BrowseFragment extends ListFragment
         leave();
     }
 
+
+    @OnActivityResult(COPY_FROM)
+    protected void copyFromStorageAccess(int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        Uri uri = data.getData();
+        DocumentFile srcDocument = DocumentFile.fromSingleUri(getActivity(), uri);
+        Node target = currentDir.newFile(srcDocument.getName(), srcDocument.getType());
+
+        if (target == null) {
+            // can not create new file
+            Toast.makeText(getActivity(), R.string.msg_copy_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DocumentFileNode src = new DocumentFileNode(null, srcDocument);
+        CopyFragment copyFragment = CopyFragment.newInstance();
+        copyFragment.setFileToCopy(src, target);
+        copyFragment.show(getFragmentManager(), "copy_from_fragment");
+    }
+
+    @OnActivityResult(COPY_TO)
+    protected void copyToStorageAccess(int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        // no source file
+        if (sourceFile == null) {
+            Toast.makeText(getActivity(), R.string.msg_copy_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Node src = sourceFile;
+        sourceFile = null;  // remove cache
+
+        DocumentFile dstDocument = DocumentFile.fromSingleUri(getActivity(), data.getData());
+        DocumentFileNode dst = new DocumentFileNode(null, dstDocument);
+
+        CopyFragment copyFragment = CopyFragment.newInstance();
+        copyFragment.setFileToCopy(src, dst);
+        copyFragment.show(getFragmentManager(), "copy_to_fragment");
+    }
+
     private void createNewDir() {
         NewDirFragment newDirFragment = NewDirFragment.newInstance();
         newDirFragment.setCurrentDir(currentDir);
@@ -221,42 +251,6 @@ public class BrowseFragment extends ListFragment
     private void onDirectoryLeave(Node node) {
         stack.pop();
         browseFragmentListener.onLocationChanged(stack);
-    }
-
-    private void copyFromStorageAccess(Intent data) {
-
-        Uri uri = data.getData();
-        DocumentFile srcDocument = DocumentFile.fromSingleUri(getActivity(), uri);
-        Node target = currentDir.newFile(srcDocument.getName(), srcDocument.getType());
-
-        if (target == null) {
-            // can not create new file
-            Toast.makeText(getActivity(), R.string.msg_copy_failed, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        DocumentFileNode src = new DocumentFileNode(null, srcDocument);
-        CopyFragment copyFragment = CopyFragment.newInstance();
-        copyFragment.setFileToCopy(src, target);
-        copyFragment.show(getFragmentManager(), "copy_from_fragment");
-    }
-
-    private void copyToStorageAccess(Intent data) {
-        if (sourceFile == null) {
-            // no source file
-            Toast.makeText(getActivity(), R.string.msg_copy_failed, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Node src = sourceFile;
-        sourceFile = null;  // remove cache
-
-        DocumentFile dstDocument = DocumentFile.fromSingleUri(getActivity(), data.getData());
-        DocumentFileNode dst = new DocumentFileNode(null, dstDocument);
-
-        CopyFragment copyFragment = CopyFragment.newInstance();
-        copyFragment.setFileToCopy(src, dst);
-        copyFragment.show(getFragmentManager(), "copy_to_fragment");
     }
 
     private synchronized void loadChildren(Node path) {
@@ -323,7 +317,7 @@ public class BrowseFragment extends ListFragment
         setListShown(true);
     }
 
-    final private class ChildrenListLoader extends AsyncTask<Object,Object,List<Node>> {
+    private final class ChildrenListLoader extends AsyncTask<Object,Object,List<Node>> {
 
         private boolean loading;
         private Node path;

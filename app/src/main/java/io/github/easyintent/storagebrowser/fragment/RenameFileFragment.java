@@ -89,11 +89,11 @@ public class RenameFileFragment extends DialogFragment {
 
     @Background
     protected void rename(Node node, String newName) {
-        onDeleteDone(node.rename(newName));
+        onRenameDone(node.rename(newName));
     }
 
     @UiThread
-    protected void onDeleteDone(boolean success) {
+    protected void onRenameDone(boolean success) {
         Context context = getActivity();
         if (!isAdded() || context == null) {
             return;
