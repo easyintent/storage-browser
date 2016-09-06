@@ -81,6 +81,13 @@ public class BrowseFragment extends ListFragment
     }
 
     @Override
+    public void onViewAs(Node node) {
+        ViewAsDialogFragment viewAsDialogFragment = ViewAsDialogFragment.newInstance();
+        viewAsDialogFragment.setTarget(node);
+        viewAsDialogFragment.show(getFragmentManager(), "view_as_dialog");
+    }
+
+    @Override
     public void onDelete(Node node) {
         ConfirmDeleteFileFragment confirmDeleteFileFragment = ConfirmDeleteFileFragment.newInstance();
         confirmDeleteFileFragment.setTargetFile(node);

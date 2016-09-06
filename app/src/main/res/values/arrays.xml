@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="open_as">
+        <item>@string/lbl_text</item>
+        <item>@string/lbl_image</item>
+        <item>@string/lbl_audio</item>
+        <item>@string/lbl_video</item>
+    </array>
+
+    <array name="open_as_type">
+        <item>text/*</item>
+        <item>image/*</item>
+        <item>audio/*</item>
+        <item>video/*</item>
+    </array>
+
+</resources>

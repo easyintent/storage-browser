@@ -78,6 +78,9 @@ public class NodeListAdapter<T extends Node> extends ArrayAdapter<T> {
             case R.id.action_view:
                 listener.onView(node);
                 break;
+            case R.id.action_view_as:
+                listener.onViewAs(node);
+                break;
             case R.id.action_delete:
                 listener.onDelete(node);
                 break;

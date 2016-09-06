@@ -4,6 +4,7 @@ import io.github.easyintent.storagebrowser.data.Node;
 
 public interface NodeActionListener {
     void onView(Node node);
+    void onViewAs(Node node);
     void onDelete(Node node);
     void onRename(Node node);
     void onCopy(Node node);

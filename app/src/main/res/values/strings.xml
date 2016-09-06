@@ -37,6 +37,7 @@
     <string name="lbl_mb">MB</string>
 
     <string name="lbl_view">Open</string>
+    <string name="lbl_view_as">Open As</string>
     <string name="lbl_share">Share</string>
     <string name="lbl_delete">Delete</string>
     <string name="lbl_rename">Rename</string>
@@ -44,6 +45,11 @@
     <string name="lbl_copy_to">Copy to</string>
     <string name="lbl_copy_from">Copy from</string>
     <string name="lbl_home">Home</string>
+
+    <string name="lbl_text">Text</string>
+    <string name="lbl_image">Image</string>
+    <string name="lbl_audio">Audio</string>
+    <string name="lbl_video">Video</string>
 
     <string name="msg_no_app">No app to handle this file</string>
     <string name="msg_no_picker">No picker installed</string>
