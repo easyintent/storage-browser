@@ -7,6 +7,9 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.provider.DocumentFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,6 +19,8 @@ import java.util.List;
 import io.github.easyintent.storagebrowser.R;
 
 public class DocumentFileNode implements Node {
+
+    private static final Logger logger = LoggerFactory.getLogger(DocumentFileNode.class);
 
     private Node parent;
     private DocumentFile file;
@@ -99,7 +104,7 @@ public class DocumentFileNode implements Node {
         DocumentFile[] files = file.listFiles();
         List<Node> nodeList = new ArrayList<>();
         for (DocumentFile file : files) {
-            nodeList.add(new DocumentFileNode(parent, file));
+            nodeList.add(new DocumentFileNode(this, file));
         }
         return nodeList;
     }
