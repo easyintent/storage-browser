@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 24
@@ -11,6 +10,12 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "0.0.1-git"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["classSuffix": "Ex"]
+            }
+        }
     }
 
     buildTypes {
@@ -27,17 +32,7 @@ android {
 }
 
 ext {
-    aaVersion = '4.0.0'
-}
-
-apt {
-    arguments {
-        androidManifestFile variant.outputs[0]?.processResources?.manifestFile
-        resourcePackageName android.defaultConfig.applicationId
-
-        // use SomeClassEx convention
-        classSuffix "Ex"
-    }
+    aaVersion = '4.2.0'
 }
 
 dependencies {
@@ -51,7 +46,7 @@ dependencies {
     compile "org.androidannotations:androidannotations-api:$aaVersion"
     compile ('commons-io:commons-io:2.4') {  transitive = false  }
 
-    apt "org.androidannotations:androidannotations:$aaVersion"
+    annotationProcessor "org.androidannotations:androidannotations:$aaVersion"
 
     testCompile 'junit:junit:4.12'
 }
