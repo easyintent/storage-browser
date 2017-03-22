@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,6 +89,7 @@ public class NewDirFragment extends DialogFragment {
     }
 
     @UiThread
+    @IgnoreWhen(IgnoreWhen.State.DETACHED)
     protected void onCreateDirDone(boolean success) {
         Toast.makeText(getActivity(),
                 success ? R.string.msg_create_dir_ok : R.string.msg_create_dir_failed,

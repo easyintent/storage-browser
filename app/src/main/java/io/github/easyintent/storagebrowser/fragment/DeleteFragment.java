@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,10 +78,8 @@ public class DeleteFragment extends DialogFragment {
     }
 
     @UiThread
+    @IgnoreWhen(IgnoreWhen.State.DETACHED)
     protected void onDeleteDone(boolean success) {
-        if (!isAdded()) {
-            return;
-        }
         Toast.makeText(getActivity(),
                 success ? R.string.msg_delete_ok : R.string.msg_delete_failed,
                 Toast.LENGTH_SHORT).show();

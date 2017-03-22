@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -98,13 +99,8 @@ public class CopyFragment extends DialogFragment {
     }
 
     @UiThread
+    @IgnoreWhen(IgnoreWhen.State.DETACHED)
     protected void onCopyDone(boolean success, String message) {
-
-        if (!isAdded()) {
-            // fragment not attached
-            return;
-        }
-
         if (message != null) {
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         } else {
