@@ -112,6 +112,11 @@ public class TopLevelStorageFragment extends ListFragment
     }
 
     @Override
+    public void onView(TopLevelDir topLevelDir) {
+        onItemSelected(topLevelDir);
+    }
+
+    @Override
     public void onRemoveFromList(TopLevelDir topLevelDir) {
         applyTopLevelList(Action.REMOVE, topLevelDir);
     }

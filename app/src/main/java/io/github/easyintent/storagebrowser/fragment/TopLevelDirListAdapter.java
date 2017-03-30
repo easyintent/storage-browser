@@ -71,6 +71,9 @@ public class TopLevelDirListAdapter extends ArrayAdapter<TopLevelDir> {
 
     private void handleAction(MenuItem menuItem, TopLevelDir item) {
         switch (menuItem.getItemId()) {
+            case R.id.action_view:
+                listener.onView(item);
+                break;
             case R.id.action_remove_from_list:
                 listener.onRemoveFromList(item);
                 break;
