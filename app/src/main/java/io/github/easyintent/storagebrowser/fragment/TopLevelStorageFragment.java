@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.provider.DocumentFile;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EFragment;
@@ -112,6 +113,14 @@ public class TopLevelStorageFragment extends ListFragment
     }
 
     @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        TopLevelDir item = (TopLevelDir) l.getItemAtPosition(position);
+        if (item != null) {
+            onItemSelected(item);
+        }
+    }
+
+    @Override
     public void onView(TopLevelDir topLevelDir) {
         onItemSelected(topLevelDir);
     }
@@ -193,16 +202,6 @@ public class TopLevelStorageFragment extends ListFragment
     private void showList(List<TopLevelDir> topLevelDirs) {
         final TopLevelDirListAdapter adapter = new TopLevelDirListAdapter(getActivity(), topLevelDirs, this);
         setListAdapter(adapter);
-
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TopLevelDir item = (TopLevelDir) adapterView.getItemAtPosition(i);
-                if (item != null) {
-                    onItemSelected(item);
-                }
-            }
-        });
 
         if (topLevelDirs.isEmpty()) {
             setEmptyText(getString(R.string.msg_add_root));

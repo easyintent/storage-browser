@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.provider.DocumentFile;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EFragment;
@@ -73,6 +74,14 @@ public class BrowseFragment extends ListFragment
         browseFragmentListener = (BrowseFragmentListener) getActivity();
         browseFragmentListener.onLocationChanged(stack);
         reload();
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Node item = (Node) l.getItemAtPosition(position);
+        if (item != null) {
+            onItemSelected(item);
+        }
     }
 
     @Override
@@ -306,16 +315,6 @@ public class BrowseFragment extends ListFragment
     private void showList(List<? extends Node> children) {
         final NodeListAdapter adapter = new NodeListAdapter(getActivity(), children, this);
         setListAdapter(adapter);
-
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Node item = (Node) adapterView.getItemAtPosition(i);
-                if (item != null) {
-                    onItemSelected(item);
-                }
-            }
-        });
 
         if (children.isEmpty()) {
             setEmptyText(getString(R.string.lbl_no_data));
